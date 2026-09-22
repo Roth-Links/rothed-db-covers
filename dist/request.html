@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request Premium — RothedDB</title>
+<meta name="robots" content="noindex, nofollow"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"/>
+<style>
+  :root {
+    --bg:           #03050d;
+    --bg2:          #060a14;
+    --bg3:          #090e1a;
+    --card:         #0b1020;
+    --card-hi:      #0f1628;
+    --border:       #131d30;
+    --border-hi:    #1d2e50;
+    --gold:         #f7c948;
+    --gold-dim:     #c49820;
+    --gold-glow:    rgba(247,201,72,.18);
+    --gold-faint:   rgba(247,201,72,.06);
+    --gold-line:    rgba(247,201,72,.22);
+    --blue:         #3d8eff;
+    --blue-dim:     rgba(61,142,255,.12);
+    --green:        #17d974;
+    --green-dim:    rgba(23,217,116,.12);
+    --red:          #f04848;
+    --red-dim:      rgba(240,72,72,.12);
+    --amber:        #f0a020;
+    --text:         #d4e0f4;
+    --text-dim:     #a0bfdf;
+    --text-muted:   #7a96bc;
+    --radius:       12px;
+    --font-brand:   'Bebas Neue', sans-serif;
+    --font-head:    'Outfit', sans-serif;
+    --font-body:    'Inter', sans-serif;
+    --font-mono:    'JetBrains Mono', monospace;
+    --transition:   all .18s ease;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text); font-family: var(--font-body);
+    font-weight: 500; min-height: 100vh; -webkit-font-smoothing: antialiased;
+    display: flex; justify-content: center; padding: 32px 16px 80px;
+  }
+  .wrap { width: 100%; max-width: 560px; }
+
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted);
+    font-family: var(--font-mono); font-size: 12px; text-decoration: none;
+    margin-bottom: 20px; transition: var(--transition);
+  }
+  .back-link:hover { color: var(--gold); }
+
+  .brand-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+  .brand { font-family: var(--font-brand); font-size: 28px; letter-spacing: 1px; color: var(--gold); }
+  .bal-badge {
+    display: flex; align-items: center; gap: 6px; background: var(--card);
+    border: 1px solid var(--border-hi); border-radius: 999px; padding: 6px 14px;
+    font-family: var(--font-mono); font-size: 13px; color: var(--gold);
+  }
+
+  .card {
+    background: linear-gradient(160deg, var(--card-hi) 0%, var(--card) 100%);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px; margin-bottom: 16px;
+  }
+  h1 { font-family: var(--font-head); font-size: 20px; color: var(--text); margin-bottom: 6px; }
+  .sub { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 20px; }
+
+  .price-tag {
+    display: inline-flex; align-items: center; gap: 6px; background: var(--gold-faint);
+    border: 1px solid var(--gold-line); border-radius: 8px; padding: 4px 10px;
+    font-family: var(--font-mono); font-size: 12px; color: var(--gold); margin-bottom: 20px;
+  }
+
+  label { display: block; font-size: 12px; font-weight: 600; color: var(--text-dim); margin-bottom: 6px; margin-top: 16px; }
+  label:first-of-type { margin-top: 0; }
+  select, textarea, input[type=text] {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 8px; padding: 11px 12px; color: var(--text); font-family: var(--font-body);
+    font-size: 14px; transition: var(--transition);
+  }
+  select:focus, textarea:focus, input:focus { outline: none; border-color: var(--gold-line); }
+  textarea { resize: vertical; min-height: 110px; line-height: 1.5; }
+  .hint { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+
+  .notice {
+    display: flex; gap: 10px; background: var(--amber); background: rgba(240,160,32,.1);
+    border: 1px solid rgba(240,160,32,.3); border-radius: 8px; padding: 12px 14px;
+    font-size: 12px; color: #f0c060; line-height: 1.5; margin-top: 20px;
+  }
+
+  .submit-btn {
+    width: 100%; margin-top: 22px; padding: 14px; border: none; border-radius: 8px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+    color: #1a1200; font-family: var(--font-head); font-weight: 700; font-size: 14px;
+    letter-spacing: .3px; cursor: pointer; transition: var(--transition);
+  }
+  .submit-btn:hover:not(:disabled) { filter: brightness(1.08); transform: translateY(-1px); }
+  .submit-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  .state-box { text-align: center; padding: 40px 20px; }
+  .state-box .icon { font-size: 40px; margin-bottom: 14px; }
+  .state-box h2 { font-family: var(--font-head); font-size: 17px; margin-bottom: 8px; }
+  .state-box p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px; }
+  .state-box a.cta, .state-box button.cta {
+    display: inline-block; background: var(--card-hi); border: 1px solid var(--border-hi);
+    color: var(--gold); font-family: var(--font-mono); font-size: 13px; padding: 10px 20px;
+    border-radius: 8px; text-decoration: none; cursor: pointer; transition: var(--transition);
+  }
+  .state-box a.cta:hover, .state-box button.cta:hover { border-color: var(--gold-line); }
+
+  .token-box {
+    background: var(--bg3); border: 1px dashed var(--gold-line); border-radius: 8px;
+    padding: 14px; font-family: var(--font-mono); font-size: 16px; color: var(--gold);
+    letter-spacing: 1px; text-align: center; margin: 16px 0;
+  }
+
+  .err-msg { color: var(--red); font-size: 12px; margin-top: 10px; display: none; }
+  .err-msg.show { display: block; }
+
+  #form-section, #approval-check, #not-approved, #success-box, #login-required { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="/" class="back-link">← Kembali ke RothedDB</a>
+
+  <div class="brand-row">
+    <div class="brand">REQUEST PREMIUM</div>
+    <div class="bal-badge">💰 <span id="bal-num">—</span> CR</div>
+  </div>
+
+  <!-- Not logged in -->
+  <div class="card state-box" id="login-required">
+    <div class="icon">🔒</div>
+    <h2>Login dulu ya</h2>
+    <p>Kamu perlu login sebagai member di halaman utama RothedDB dulu sebelum bisa submit request di sini.</p>
+    <a class="cta" href="/">Ke Halaman Login</a>
+  </div>
+
+  <!-- Checking approval -->
+  <div class="card state-box" id="approval-check">
+    <div class="icon">⏳</div>
+    <h2>Mengecek status approval...</h2>
+  </div>
+
+  <!-- Not approved -->
+  <div class="card state-box" id="not-approved">
+    <div class="icon">💬</div>
+    <h2>Belum ada approval request</h2>
+    <p>Fitur ini khusus buat request yang udah dikonfirmasi bisa dikerjakan. Buka tiket kategori "Request" dulu buat konsultasi — kalau bisa dikerjakan, kamu akan di-approve dan bisa submit + bayar di halaman ini.</p>
+    <a class="cta" href="https://rothed-db.com/support">Buka Tiket Request</a>
+  </div>
+
+  <!-- Form -->
+  <div class="card" id="form-section">
+    <h1>Submit Request-mu</h1>
+    <div class="sub">Request ini udah dikonfirmasi bisa dikerjakan lewat konsultasi personal kamu. Isi detail di bawah buat finalisasi & pembayaran.</div>
+    <div class="price-tag">💳 499 CR — non-refundable setelah submit</div>
+
+    <label for="platform">Platform</label>
+    <select id="platform">
+      <option value="PS2">PS2</option>
+      <option value="PS3">PS3</option>
+      <option value="PS4">PS4</option>
+      <option value="PSP">PSP</option>
+      <option value="Switch">Nintendo Switch</option>
+      <option value="PC">PC</option>
+    </select>
+
+    <label for="game-title">Judul Game</label>
+    <input type="text" id="game-title" placeholder="cth: Persona 5 Royal"/>
+
+    <label for="description">Detail Request</label>
+    <textarea id="description" placeholder="Jelasin detail request-mu (state, progress, item, dll) — sesuai yang udah kamu diskusiin di konsultasi"></textarea>
+    <div class="hint">Pastiin detail ini match sama yang udah kamu diskusiin pas konsultasi personal, biar gak ada miskomunikasi.</div>
+
+    <div class="notice">⚠️ Setelah submit, 499 CR langsung terpotong dan <strong>tidak bisa direfund</strong> — karena feasibility-nya udah dikonfirmasi sebelumnya. Pastiin detail di atas sudah benar sebelum submit.</div>
+
+    <button class="submit-btn" id="submit-btn" onclick="submitRequest()">Submit & Bayar 499 CR</button>
+    <div class="err-msg" id="err-msg"></div>
+  </div>
+
+  <!-- Success -->
+  <div class="card state-box" id="success-box">
+    <div class="icon">✅</div>
+    <h2>Request Terkirim!</h2>
+    <p>Simpan token di bawah buat tracking. Admin akan mulai kerjain request-mu — kamu akan dihubungi lagi lewat kanal yang sama.</p>
+    <div class="token-box" id="token-display"></div>
+    <a class="cta" href="/">Kembali ke RothedDB</a>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────
+// Ganti GAS_URL ini biar sama persis dengan yang di template.html utama
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxPxl4tEsqX7r5bQmtolk9K9AhSHYypG0lPv3k-TXii4FCQ49vsym_6kK6MPzyK6QpI/exec";
+const SESS_KEY = "rdb_vault_sess"; // HARUS sama dengan key di template.html utama
+
+function loadSession() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(SESS_KEY) || "null");
+    if (!raw) return null;
+    if (Date.now() > raw.expiry) { localStorage.removeItem(SESS_KEY); return null; }
+    return raw;
+  } catch(e) { return null; }
+}
+function persistBalance(sess, newBalance) {
+  sess.balance = newBalance;
+  localStorage.setItem(SESS_KEY, JSON.stringify(sess));
+}
+
+let _sess = null;
+
+function show(id) {
+  ['login-required','approval-check','not-approved','form-section','success-box']
+    .forEach(x => document.getElementById(x).style.display = (x === id ? 'block' : 'none'));
+}
+
+async function init() {
+  _sess = loadSession();
+  if (!_sess) { show('login-required'); return; }
+
+  document.getElementById('bal-num').textContent = Number(_sess.balance || 0).toLocaleString();
+  show('approval-check');
+
+  try {
+    const res = await fetch(
+      `${GAS_URL}?action=checkrequestapproval&email=${encodeURIComponent(_sess.email)}&sessionToken=${encodeURIComponent(_sess.sessionToken)}`,
+      { cache: "no-store" }
+    );
+    const data = await res.json();
+
+    if (data.status === "approved") {
+      show('form-section');
+    } else if (data.status === "unauthorized") {
+      localStorage.removeItem(SESS_KEY);
+      show('login-required');
+    } else {
+      // not_approved / expired / consumed / any other status
+      show('not-approved');
+    }
+  } catch(e) {
+    show('not-approved'); // fail-safe: jangan biarkan orang submit kalau gagal cek approval
+  }
+}
+
+async function submitRequest() {
+  const btn  = document.getElementById('submit-btn');
+  const errEl = document.getElementById('err-msg');
+  errEl.classList.remove('show');
+
+  const platform    = document.getElementById('platform').value;
+  const gameTitle    = document.getElementById('game-title').value.trim();
+  const description  = document.getElementById('description').value.trim();
+
+  if (!gameTitle || !description) {
+    errEl.textContent = "Isi judul game dan detail request dulu ya.";
+    errEl.classList.add('show');
+    return;
+  }
+  if (Number(_sess.balance || 0) < 499) {
+    errEl.textContent = "CR kamu gak cukup. Top up dulu di halaman utama.";
+    errEl.classList.add('show');
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = "Memproses...";
+
+  try {
+    const res = await fetch(
+      `${GAS_URL}?action=submitpremiumrequest&email=${encodeURIComponent(_sess.email)}` +
+      `&sessionToken=${encodeURIComponent(_sess.sessionToken)}` +
+      `&platform=${encodeURIComponent(platform)}` +
+      `&gameTitle=${encodeURIComponent(gameTitle)}` +
+      `&description=${encodeURIComponent(description)}`,
+      { cache: "no-store" }
+    );
+    const data = await res.json();
+
+    if (data.status === "ok") {
+      persistBalance(_sess, data.balance);
+      document.getElementById('token-display').textContent = data.token;
+      show('success-box');
+    } else if (data.status === "insufficient") {
+      persistBalance(_sess, data.balance);
+      document.getElementById('bal-num').textContent = Number(data.balance).toLocaleString();
+      errEl.textContent = "CR kamu gak cukup. Top up dulu di halaman utama.";
+      errEl.classList.add('show');
+      btn.disabled = false; btn.textContent = "Submit & Bayar 499 CR";
+    } else if (data.status === "not_approved") {
+      show('not-approved');
+    } else if (data.status === "unauthorized") {
+      localStorage.removeItem(SESS_KEY);
+      show('login-required');
+    } else {
+      errEl.textContent = "Gagal submit request. Coba lagi.";
+      errEl.classList.add('show');
+      btn.disabled = false; btn.textContent = "Submit & Bayar 499 CR";
+    }
+  } catch(e) {
+    // Sama seperti pola claim di halaman utama — jangan diam-diam reset kalau
+    // koneksi putus, karena CR mungkin sudah kepotong di server.
+    errEl.textContent = "Koneksi terputus. Kalau CR kamu udah kepotong tapi gak dapat token, JANGAN submit ulang — langsung hubungi admin dengan screenshot saldo.";
+    errEl.classList.add('show');
+    btn.disabled = false; btn.textContent = "Submit & Bayar 499 CR";
+  }
+}
+
+init();
+</script>
+</body>
+</html>

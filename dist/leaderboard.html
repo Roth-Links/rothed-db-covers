@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Leaderboard — RothedDB</title>
+<meta name="robots" content="noindex"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzBhMGYxZSIvPjx0ZXh0IHg9IjE2IiB5PSIyMyIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjIiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmN2M5NDgiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlI8L3RleHQ+PC9zdmc+"/>
+<meta name="theme-color" content="#03050d"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg:           #03050d;
+    --bg2:          #060a14;
+    --bg3:          #090e1a;
+    --card:         #0b1020;
+    --card-hi:      #0f1628;
+    --border:       #131d30;
+    --border-hi:    #1d2e50;
+    --gold:         #f7c948;
+    --gold-dim:     #c49820;
+    --gold-glow:    rgba(247,201,72,.18);
+    --gold-faint:   rgba(247,201,72,.06);
+    --gold-line:    rgba(247,201,72,.22);
+    --silver:       #cfd8e6;
+    --bronze:       #d98a4d;
+    --blue:         #3d8eff;
+    --blue-dim:     rgba(61,142,255,.12);
+    --green:        #17d974;
+    --green-dim:    rgba(23,217,116,.12);
+    --red:          #f04848;
+    --amber:        #f0a020;
+    --text:         #d4e0f4;
+    --text-dim:     #a0bfdf;
+    --text-muted:   #7a96bc;
+    --font-brand:   'Bebas Neue', sans-serif;
+    --font-head:    'Outfit', sans-serif;
+    --font-body:    'Inter', sans-serif;
+    --font-mono:    'JetBrains Mono', monospace;
+    --transition:   all .18s ease;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: radial-gradient(ellipse at top, var(--bg3), var(--bg) 60%);
+    color: var(--text); font-family: var(--font-body);
+    min-height: 100vh; padding: 24px 16px 60px; position: relative; overflow-x: hidden;
+  }
+
+  /* ── Ambient background glow ─────────────────────────────── */
+  .orb { position: fixed; border-radius: 50%; filter: blur(70px); pointer-events: none; z-index: 0; opacity: .35; }
+  .orb-1 { width: 340px; height: 340px; top: -120px; left: -100px; background: radial-gradient(circle, var(--gold-glow), transparent 70%); }
+  .orb-2 { width: 300px; height: 300px; bottom: -100px; right: -80px; background: radial-gradient(circle, var(--blue-dim), transparent 70%); }
+
+  .wrap { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+
+  .top-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 22px;
+  }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--text-muted); text-decoration: none;
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: .5px;
+    transition: var(--transition);
+  }
+  .back-link:hover { color: var(--gold); transform: translateX(-2px); }
+
+  .info-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 13px; border-radius: 20px; cursor: pointer;
+    background: var(--gold-faint); border: 1px solid var(--gold-line);
+    color: var(--gold); font-family: var(--font-head); font-size: 11.5px;
+    font-weight: 700; letter-spacing: .3px; transition: var(--transition);
+  }
+  .info-btn:hover { background: rgba(247,201,72,.18); border-color: var(--gold); }
+
+  /* ── Info / How-it-works popup ─────────────────────────────── */
+  #info-modal {
+    display: none; position: fixed; inset: 0; z-index: 500;
+    background: rgba(3,5,13,.75); backdrop-filter: blur(3px);
+    align-items: center; justify-content: center; padding: 20px 14px;
+  }
+  #info-modal.open { display: flex; }
+  #info-box {
+    background: linear-gradient(160deg, #0d1526 0%, #080d1a 100%);
+    border: 1px solid var(--gold-line); border-radius: 18px;
+    padding: 26px 24px 22px; max-width: 460px; width: 100%;
+    max-height: 88dvh; overflow-y: auto; position: relative;
+    box-shadow: 0 24px 64px rgba(0,0,0,.6);
+    animation: popIn .18s ease;
+  }
+  @keyframes popIn { from { opacity: 0; transform: scale(.96) translateY(6px); } to { opacity: 1; transform: none; } }
+  #info-close-btn {
+    position: absolute; top: 14px; right: 14px; width: 30px; height: 30px;
+    border-radius: 50%; background: rgba(255,255,255,.06); border: 1px solid var(--border);
+    color: var(--text-muted); cursor: pointer; font-size: 14px;
+    display: flex; align-items: center; justify-content: center; transition: var(--transition);
+  }
+  #info-close-btn:hover { color: var(--text); border-color: var(--border-hi); }
+  #info-box h2 {
+    font-family: var(--font-head); font-size: 18px; font-weight: 800;
+    color: var(--gold); margin-bottom: 14px; padding-right: 30px;
+  }
+  .info-item { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+  .info-item:last-of-type { border-bottom: none; margin-bottom: 4px; padding-bottom: 0; }
+  .info-item-title {
+    font-family: var(--font-head); font-size: 12.5px; font-weight: 700;
+    color: var(--text); margin-bottom: 4px; display: flex; align-items: center; gap: 6px;
+  }
+  .info-item-desc { font-size: 11.5px; color: var(--text-muted); line-height: 1.6; }
+  .info-item-desc b { color: var(--gold); }
+  .info-item-desc .blue { color: var(--blue); }
+  .info-footnote {
+    margin-top: 14px; padding: 10px 12px; border-radius: 10px;
+    background: var(--blue-dim); border: 1px solid rgba(61,142,255,.25);
+    font-size: 10.5px; color: var(--text-muted); line-height: 1.6;
+  }
+  .info-footnote b { color: var(--blue); }
+
+  /* ── Page head ─────────────────────────────────── */
+  .page-head { text-align: center; margin-bottom: 26px; }
+  .trophy-badge {
+    width: 56px; height: 56px; margin: 0 auto 12px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center; font-size: 26px;
+    background: linear-gradient(135deg, var(--gold-faint), rgba(247,201,72,.02));
+    border: 1px solid var(--gold-line); box-shadow: 0 0 0 6px var(--gold-faint);
+  }
+  .page-head h1 {
+    font-family: var(--font-head); font-weight: 800; font-size: clamp(22px, 5vw, 30px);
+    color: var(--gold); letter-spacing: 1px; margin-bottom: 6px;
+  }
+  .page-head p { color: var(--text-muted); font-size: 12.5px; max-width: 420px; margin: 0 auto; }
+
+  /* ── Tabs ─────────────────────────────────── */
+  .tabs {
+    display: flex; gap: 6px; margin-bottom: 18px; flex-wrap: wrap;
+    border-bottom: 1px solid var(--border); padding-bottom: 10px;
+  }
+  .tab-btn {
+    flex: 1 1 auto; min-width: 130px; text-align: center;
+    padding: 9px 12px; border-radius: 10px; cursor: pointer;
+    background: var(--card); border: 1px solid var(--border);
+    color: var(--text-muted); font-family: var(--font-head); font-size: 11.5px;
+    font-weight: 700; letter-spacing: .4px; transition: var(--transition);
+    user-select: none;
+  }
+  .tab-btn.active {
+    background: linear-gradient(135deg, var(--gold-faint), rgba(247,201,72,.02));
+    border-color: var(--gold-line); color: var(--gold);
+    box-shadow: 0 4px 14px rgba(247,201,72,.08);
+  }
+  .tab-btn:hover:not(.active) { border-color: var(--border-hi); color: var(--text-dim); }
+
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn .25s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .section-note {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 11.5px; color: var(--text-muted); margin-bottom: 18px;
+    line-height: 1.6; background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 14px;
+  }
+  .section-note .snote-ico { font-size: 15px; flex-shrink: 0; line-height: 1.4; }
+  .section-note b { color: var(--text); }
+
+  /* ── Podium (top 3) ─────────────────────────────────── */
+  .podium {
+    display: flex; align-items: flex-end; justify-content: center;
+    gap: 10px; margin-bottom: 20px; padding: 10px 4px 0;
+  }
+  .podium-slot {
+    flex: 1 1 0; max-width: 160px; min-width: 0;
+    display: flex; flex-direction: column; align-items: center;
+    animation: riseUp .45s ease both;
+  }
+  .podium-slot.second { order: 1; }
+  .podium-slot.first  { order: 2; }
+  .podium-slot.third  { order: 3; }
+  @keyframes riseUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+  .podium-crown { font-size: 17px; margin-bottom: 2px; filter: drop-shadow(0 2px 6px rgba(247,201,72,.5)); }
+  .podium-avatar {
+    width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-head); font-weight: 800; font-size: 18px;
+    margin-bottom: 8px; position: relative;
+  }
+  .podium-slot.first .podium-avatar {
+    width: 68px; height: 68px; font-size: 24px;
+    background: linear-gradient(135deg,#f7c948,#c49820); color: #1a1400;
+    box-shadow: 0 0 0 4px var(--gold-faint), 0 10px 26px rgba(247,201,72,.35);
+  }
+  .podium-slot.second .podium-avatar {
+    background: linear-gradient(135deg,#cfd8e6,#9aa7ba); color: #10141c;
+    box-shadow: 0 0 0 3px rgba(154,167,186,.12), 0 8px 20px rgba(154,167,186,.22);
+  }
+  .podium-slot.third .podium-avatar {
+    background: linear-gradient(135deg,#d98a4d,#a35a26); color: #1a1000;
+    box-shadow: 0 0 0 3px rgba(211,138,77,.12), 0 8px 20px rgba(211,138,77,.22);
+  }
+  .podium-handle {
+    font-family: var(--font-mono); font-size: 11px; color: var(--text);
+    max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin-bottom: 3px;
+  }
+  .podium-value { font-family: var(--font-head); font-weight: 800; font-size: 14px; color: var(--gold); text-align: center; }
+  .podium-value small { display: block; font-family: var(--font-mono); font-weight: 500; font-size: 9px; color: var(--text-muted); }
+  .podium-base {
+    margin-top: 10px; width: 100%; border-radius: 10px 10px 0 0;
+    display: flex; align-items: flex-start; justify-content: center; padding-top: 8px;
+    font-family: var(--font-head); font-weight: 800;
+  }
+  .podium-slot.first .podium-base {
+    height: 62px; background: linear-gradient(180deg, var(--gold-faint), transparent);
+    border: 1px solid var(--gold-line); border-bottom: none; color: var(--gold); font-size: 19px;
+  }
+  .podium-slot.second .podium-base {
+    height: 44px; background: linear-gradient(180deg, rgba(154,167,186,.12), transparent);
+    border: 1px solid var(--border-hi); border-bottom: none; color: var(--text-dim); font-size: 15px;
+  }
+  .podium-slot.third .podium-base {
+    height: 32px; background: linear-gradient(180deg, rgba(211,138,77,.12), transparent);
+    border: 1px solid var(--border-hi); border-bottom: none; color: var(--text-dim); font-size: 15px;
+  }
+
+  /* ── Rest-of-list card ─────────────────────────────────── */
+  .lb-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+  }
+  .lb-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 16px; border-bottom: 1px solid var(--border);
+    animation: fadeIn .3s ease both;
+  }
+  .lb-row:last-child { border-bottom: none; }
+  .lb-row:hover { background: rgba(255,255,255,.02); }
+
+  .lb-rank {
+    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-head); font-size: 11px; font-weight: 800;
+    background: var(--bg3); color: var(--text-muted); border: 1px solid var(--border);
+  }
+  .lb-avatar {
+    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg3); border: 1px solid var(--border);
+    font-family: var(--font-head); font-size: 10.5px; font-weight: 700; color: var(--text-muted);
+  }
+  .lb-handle {
+    flex: 1; min-width: 0; font-family: var(--font-mono); font-size: 12.5px;
+    color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .lb-value {
+    flex-shrink: 0; font-family: var(--font-head); font-size: 13px; font-weight: 700;
+    color: var(--gold); text-align: right;
+  }
+  .lb-value small { display: block; font-family: var(--font-mono); font-size: 9.5px; color: var(--text-muted); font-weight: 500; }
+
+  .empty {
+    padding: 30px 16px; text-align: center; color: var(--text-muted); font-size: 12.5px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  }
+
+  /* ── "Kamu: Rank X" banner ─────────────────────────────────── */
+  .my-rank {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 14px; padding: 12px 14px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--gold-faint), rgba(247,201,72,.02));
+    border: 1px solid var(--gold-line);
+    animation: fadeIn .3s ease;
+  }
+  .my-rank-badge {
+    flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg,#f7c948,#c49820); color: #1a1400;
+    font-family: var(--font-head); font-weight: 800; font-size: 13px;
+  }
+  .my-rank-text { flex: 1; min-width: 0; }
+  .my-rank-label {
+    font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);
+    letter-spacing: .4px; margin-bottom: 1px;
+  }
+  .my-rank-value {
+    font-family: var(--font-head); font-weight: 800; font-size: 14.5px; color: var(--gold);
+  }
+  .my-rank-value span { color: var(--text-dim); font-weight: 600; font-size: 12px; }
+  .my-rank.not-ranked { border-color: var(--border-hi); background: var(--card); }
+  .my-rank.not-ranked .my-rank-badge {
+    background: var(--bg3); color: var(--text-muted); border: 1px solid var(--border);
+  }
+  .my-rank.not-ranked .my-rank-value { color: var(--text-dim); font-size: 12.5px; font-weight: 600; }
+  .my-rank.login-cta { cursor: pointer; }
+  .my-rank.login-cta:hover { border-color: var(--gold); }
+
+  /* Highlight the logged-in user's own row/podium slot */
+  .lb-row.is-me {
+    background: var(--gold-faint);
+    border-left: 2px solid var(--gold);
+    padding-left: 14px;
+  }
+  .lb-row.is-me .lb-handle { color: var(--gold); font-weight: 600; }
+  .lb-row.is-me .lb-rank { background: var(--gold); color: #1a1400; border-color: var(--gold); }
+  .podium-slot.is-me .podium-avatar { box-shadow: 0 0 0 3px var(--gold), 0 8px 20px rgba(247,201,72,.4); }
+
+  .updated-at {
+    text-align: center; font-family: var(--font-mono); font-size: 10.5px;
+    color: var(--text-muted); margin-top: 16px;
+  }
+
+  /* ── Skeleton loading ─────────────────────────────────── */
+  .skel-wrap { display: flex; flex-direction: column; gap: 8px; }
+  .skel-podium { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+  .skel-circle { width: 56px; height: 56px; border-radius: 50%; }
+  .skel {
+    height: 50px; border-radius: 10px;
+    background: linear-gradient(90deg, var(--card), var(--card-hi), var(--card));
+    background-size: 200% 100%; animation: shimmer 1.3s infinite;
+  }
+  .skel-circle { background: linear-gradient(90deg, var(--card), var(--card-hi), var(--card)); background-size: 200% 100%; animation: shimmer 1.3s infinite; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  @media (max-width: 480px) {
+    body { padding: 16px 10px 48px; }
+    .tab-btn { min-width: 100px; font-size: 10.5px; padding: 8px 8px; }
+    .lb-row { padding: 10px 12px; gap: 9px; }
+    .lb-handle { font-size: 11.5px; }
+    .podium { gap: 6px; }
+    .podium-handle { max-width: 76px; font-size: 10px; }
+    .podium-slot.first .podium-avatar { width: 58px; height: 58px; font-size: 20px; }
+    .podium-avatar { width: 44px; height: 44px; font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="wrap">
+
+  <div class="top-nav">
+    <a href="index.html" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+      Back to RothedDB
+    </a>
+    <button class="info-btn" onclick="openInfoModal()" aria-label="Cara kerja leaderboard">
+      ℹ️ Cara Kerja
+    </button>
+  </div>
+
+  <div class="page-head">
+    <div class="trophy-badge">🏆</div>
+    <h1>Leaderboard</h1>
+    <p>Standing minggu ini, streak, dan CR terbanyak — semua nama disamarkan demi privasi.</p>
+  </div>
+
+  <div class="tabs">
+    <div class="tab-btn active" data-tab="claim">📅 Daily Claim</div>
+    <div class="tab-btn" data-tab="spender">💎 Top Spender</div>
+    <div class="tab-btn" data-tab="streak">🔥 Streak</div>
+    <div class="tab-btn" data-tab="lifetime">⭐ Lifetime CR</div>
+  </div>
+
+  <!-- Daily Claim (weekly) -->
+  <div class="panel active" id="panel-claim">
+    <div class="section-note">
+      <span class="snote-ico">📅</span>
+      <span>Ranking berdasarkan CR gratis yang didapat dari klaim harian, <b>7 hari terakhir</b>.
+      Top 10 setiap minggu dapat bonus CR gratis — <b>#1 +100 CR</b>, #2 +70 CR, #3 +50 CR, #4–10 +25 CR.
+      Reset &amp; hadiah dibagikan tiap <b>Senin</b>.</span>
+    </div>
+    <div id="myrank-claim"></div>
+    <div id="lb-claim" class="skel-wrap">
+      <div class="skel-podium"><div class="skel-circle"></div><div class="skel-circle" style="width:68px;height:68px;"></div><div class="skel-circle"></div></div>
+      <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+    </div>
+  </div>
+
+  <!-- Top Spender (weekly) -->
+  <div class="panel" id="panel-spender">
+    <div class="section-note">
+      <span class="snote-ico">💎</span>
+      <span>Ranking berdasarkan CR dari top up, <b>7 hari terakhir</b>.
+      Top 5 dapat bonus persentase dari CR yang mereka top up minggu itu —
+      <b>#1 +25%</b>, #2 +17%, #3 +10%, #4 +8%, #5 +5% (maks 3.000 CR).
+      Bonus diberikan sebagai CR gratis, dibagikan tiap <b>Senin</b>.</span>
+    </div>
+    <div id="myrank-spender"></div>
+    <div id="lb-spender" class="skel-wrap">
+      <div class="skel-podium"><div class="skel-circle"></div><div class="skel-circle" style="width:68px;height:68px;"></div><div class="skel-circle"></div></div>
+      <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+    </div>
+  </div>
+
+  <!-- Streak (all-time) -->
+  <div class="panel" id="panel-streak">
+    <div class="section-note">
+      <span class="snote-ico">🔥</span>
+      <span>Streak klaim harian berturut-turut yang sedang berjalan saat ini.</span>
+    </div>
+    <div id="myrank-streak"></div>
+    <div id="lb-streak" class="skel-wrap">
+      <div class="skel-podium"><div class="skel-circle"></div><div class="skel-circle" style="width:68px;height:68px;"></div><div class="skel-circle"></div></div>
+      <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+    </div>
+  </div>
+
+  <!-- Lifetime CR (all-time) -->
+  <div class="panel" id="panel-lifetime">
+    <div class="section-note">
+      <span class="snote-ico">⭐</span>
+      <span>Total CR yang pernah didapat sepanjang waktu (gratis + top up).</span>
+    </div>
+    <div id="myrank-lifetime"></div>
+    <div id="lb-lifetime" class="skel-wrap">
+      <div class="skel-podium"><div class="skel-circle"></div><div class="skel-circle" style="width:68px;height:68px;"></div><div class="skel-circle"></div></div>
+      <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+    </div>
+  </div>
+
+  <div class="updated-at" id="updatedAt"></div>
+
+</div>
+
+<!-- Info / How-it-works popup -->
+<div id="info-modal" onclick="if(event.target===this)closeInfoModal()">
+  <div id="info-box">
+    <button id="info-close-btn" onclick="closeInfoModal()" aria-label="Close">✕</button>
+    <h2>🏆 Cara Kerja Leaderboard</h2>
+
+    <div class="info-item">
+      <div class="info-item-title">📅 Daily Claim Champions <span style="color:var(--text-muted);font-weight:400;font-size:10.5px;">— mingguan</span></div>
+      <div class="info-item-desc">
+        Dihitung dari CR gratis yang kamu dapat lewat klaim harian, <b>7 hari terakhir</b>. CR dari top up tidak dihitung di kategori ini.<br>
+        Hadiah: <b>#1 +100 CR</b> · #2 +70 CR · #3 +50 CR · #4–10 +25 CR.
+      </div>
+    </div>
+
+    <div class="info-item">
+      <div class="info-item-title">💎 Top Spenders <span style="color:var(--text-muted);font-weight:400;font-size:10.5px;">— mingguan</span></div>
+      <div class="info-item-desc">
+        Dihitung dari CR top up (Trakteer/Ko-fi), <b>7 hari terakhir</b>. Hadiah berupa persentase dari total top up minggu itu (maks 3.000 CR):<br>
+        <b>#1 +25%</b> · #2 +17% · #3 +10% · #4 +8% · #5 +5%.
+      </div>
+    </div>
+
+    <div class="info-item">
+      <div class="info-item-title">🔥 Streak <span style="color:var(--text-muted);font-weight:400;font-size:10.5px;">— all-time</span></div>
+      <div class="info-item-desc">Hari berturut-turut kamu klaim CR harian tanpa putus. Murni gengsi, tidak ada bonus CR.</div>
+    </div>
+
+    <div class="info-item">
+      <div class="info-item-title">⭐ Lifetime CR <span style="color:var(--text-muted);font-weight:400;font-size:10.5px;">— all-time</span></div>
+      <div class="info-item-desc">Total semua CR yang pernah kamu dapat (gratis + top up), sepanjang waktu. Murni gengsi, tidak ada bonus CR.</div>
+    </div>
+
+    <div class="info-item">
+      <div class="info-item-title">⏰ Update &amp; Reset</div>
+      <div class="info-item-desc">Standing di halaman ini di-update tiap <b>24 jam</b>. Hadiah kategori mingguan (Daily Claim &amp; Top Spender) dibagikan otomatis tiap <b>Senin</b>, langsung masuk sebagai CR gratis (expired <b>7 hari</b> setelah diperoleh).</div>
+    </div>
+
+    <div class="info-footnote">
+      🔒 <b>Privasi:</b> Semua nama disamarkan jadi handle acak (mis. "Player-4F9A") — email tidak pernah ditampilkan.
+      Nggak nyaman ikut tampil? Login lalu buka menu akun kamu → <b>"Sembunyikan dari Leaderboard"</b>.
+      Kalau disembunyikan, kamu otomatis tidak ikut dihitung untuk hadiah mingguan juga.
+    </div>
+  </div>
+</div>
+
+<script>
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxPxl4tEsqX7r5bQmtolk9K9AhSHYypG0lPv3k-TXii4FCQ49vsym_6kK6MPzyK6QpI/exec"; // ← replace jika beda dari template.html
+
+// ── Info popup ────────────────────────────────────
+function openInfoModal()  { document.getElementById('info-modal').classList.add('open'); }
+function closeInfoModal() { document.getElementById('info-modal').classList.remove('open'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeInfoModal(); });
+
+// ── Tabs ──────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function initials(handle) {
+  const c = String(handle ?? '').trim().charAt(0);
+  return esc(c ? c.toUpperCase() : '?');
+}
+
+const RANK_CLASS = { 1: 'first', 2: 'second', 3: 'third' };
+
+// ── Current logged-in user (buat "Kamu: Rank X") ────────────
+// NOTE: the public leaderboard only ever returns anonymized handles
+// (Player-XXXX from _anonHandle() on the backend) and just the top 10
+// per category — it never contains a real email, and it can't tell you
+// your rank if you're outside the top 10. So "am I logged in" still
+// comes from the local session, but "what's my rank" now comes from an
+// authenticated action=getmyrank call that the backend computes itself
+// (matching on the real email server-side) — see handleGetMyRank in
+// codegs_script.
+const SESS_KEY = 'rdb_vault_sess';
+function getMySession() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(SESS_KEY) || 'null');
+    if (!raw || !raw.email || !raw.sessionToken) return null;
+    if (raw.expiry && Date.now() > raw.expiry) return null; // sesi expired
+    return { email: raw.email, sessionToken: raw.sessionToken };
+  } catch(e) { return null; }
+}
+
+// Since list items are anonymized handles, "is this row me" can only be
+// decided by rank number — if my rank in this category is known (from
+// getmyrank) and it falls within the top 10 shown here, that rank number
+// will match exactly one row.
+function podiumSlot(it, valueKey, valueSuffix, subLabel, myRank) {
+  const cls = RANK_CLASS[it.rank] || 'third';
+  const meCls = (myRank && it.rank === myRank) ? ' is-me' : '';
+  const crown = it.rank === 1 ? '<div class="podium-crown">👑</div>' : '';
+  const val = Number(it[valueKey]).toLocaleString();
+  return `
+    <div class="podium-slot ${cls}${meCls}">
+      ${crown}
+      <div class="podium-avatar">${initials(it.email)}</div>
+      <div class="podium-handle">${esc(it.email)}${meCls?' <span style="color:var(--gold)">(kamu)</span>':''}</div>
+      <div class="podium-value">${val}${valueSuffix||''}${subLabel?`<small>${subLabel}</small>`:''}</div>
+      <div class="podium-base">${it.rank}</div>
+    </div>`;
+}
+
+function listRow(it, valueKey, valueSuffix, subLabel, delayMs, myRank) {
+  const meCls = (myRank && it.rank === myRank) ? ' is-me' : '';
+  const val = Number(it[valueKey]).toLocaleString();
+  return `
+    <div class="lb-row${meCls}" style="animation-delay:${delayMs}ms">
+      <div class="lb-rank">${it.rank}</div>
+      <div class="lb-avatar">${initials(it.email)}</div>
+      <div class="lb-handle">${esc(it.email)}${meCls?' <span style="color:var(--gold)">(kamu)</span>':''}</div>
+      <div class="lb-value">${val}${valueSuffix||''}${subLabel?`<small>${subLabel}</small>`:''}</div>
+    </div>`;
+}
+
+// mine: null (not logged in) | { hidden: true } | { rank, streak|lifetime|total } | undefined (not ranked in this category)
+function renderMyRank(container, mine, valueKey, valueSuffix, loggedIn, hidden) {
+  if (!loggedIn) {
+    container.innerHTML = `
+      <div class="my-rank not-ranked login-cta" onclick="location.href='index.html'">
+        <div class="my-rank-badge">?</div>
+        <div class="my-rank-text">
+          <div class="my-rank-label">STATUS KAMU</div>
+          <div class="my-rank-value">Login di RothedDB dulu buat lihat rank kamu</div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  if (hidden) {
+    container.innerHTML = `
+      <div class="my-rank not-ranked">
+        <div class="my-rank-badge">🙈</div>
+        <div class="my-rank-text">
+          <div class="my-rank-label">STATUS KAMU</div>
+          <div class="my-rank-value">Kamu disembunyikan dari leaderboard publik</div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  if (!mine) {
+    container.innerHTML = `
+      <div class="my-rank not-ranked">
+        <div class="my-rank-badge">–</div>
+        <div class="my-rank-text">
+          <div class="my-rank-label">STATUS KAMU</div>
+          <div class="my-rank-value">Belum masuk ranking kategori ini</div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const val = Number(mine[valueKey]).toLocaleString();
+  container.innerHTML = `
+    <div class="my-rank">
+      <div class="my-rank-badge">#${mine.rank}</div>
+      <div class="my-rank-text">
+        <div class="my-rank-label">STATUS KAMU</div>
+        <div class="my-rank-value">Kamu: Rank ${mine.rank} <span>· ${val}${valueSuffix||''}</span></div>
+      </div>
+    </div>`;
+}
+
+function renderRows(container, items, valueKey, valueSuffix, subLabel, myRank) {
+  if (!items || !items.length) {
+    container.innerHTML = '<div class="empty">Belum ada data untuk ditampilkan.</div>';
+    return;
+  }
+
+  const top3 = items.filter(it => it.rank <= 3).sort((a, b) => a.rank - b.rank);
+  const rest = items.filter(it => it.rank > 3);
+
+  let html = '';
+  if (top3.length) {
+    html += `<div class="podium">${top3.map(it => podiumSlot(it, valueKey, valueSuffix, subLabel, myRank)).join('')}</div>`;
+  }
+  if (rest.length) {
+    html += `<div class="lb-card">${rest.map((it, i) => listRow(it, valueKey, valueSuffix, subLabel, i * 35, myRank)).join('')}</div>`;
+  }
+  container.innerHTML = html;
+}
+
+async function loadLeaderboard() {
+  const sess = getMySession();
+  try {
+    const fetches = [ fetch(`${GAS_URL}?action=getleaderboard`, { cache: 'no-store' }) ];
+    if (sess) {
+      fetches.push(fetch(
+        `${GAS_URL}?action=getmyrank&email=${encodeURIComponent(sess.email)}&sessionToken=${encodeURIComponent(sess.sessionToken)}`,
+        { cache: 'no-store' }
+      ));
+    }
+    const [lbRes, myRes] = await Promise.all(fetches);
+
+    const data = await lbRes.json();
+    if (data.status !== 'ok') throw new Error('bad status');
+    const lb = data.leaderboard;
+
+    // getmyrank can fail/be unauthorized (e.g. expired session on the
+    // backend even though the local copy looked valid) without breaking
+    // the public leaderboard — just fall back to "not ranked" for it.
+    let myData = null;
+    if (sess && myRes) {
+      try {
+        const parsed = await myRes.json();
+        if (parsed.status === 'ok') myData = parsed;
+      } catch(e) {}
+    }
+    const hidden = !!(myData && myData.hidden);
+    const ranks  = (myData && myData.ranks) || {};
+
+    renderMyRank(document.getElementById('myrank-claim'),    ranks.weeklyClaim,   'total',    ' CR',   !!sess, hidden);
+    renderMyRank(document.getElementById('myrank-spender'),  ranks.weeklySpender, 'total',    ' CR',   !!sess, hidden);
+    renderMyRank(document.getElementById('myrank-streak'),   ranks.streak,        'streak',   ' hari', !!sess, hidden);
+    renderMyRank(document.getElementById('myrank-lifetime'), ranks.lifetime,      'lifetime', ' CR',   !!sess, hidden);
+
+    renderRows(document.getElementById('lb-claim'),    lb.weeklyClaim,   'total', ' CR', 'minggu ini', ranks.weeklyClaim && ranks.weeklyClaim.rank);
+    renderRows(document.getElementById('lb-spender'),  lb.weeklySpender, 'total', ' CR', 'minggu ini', ranks.weeklySpender && ranks.weeklySpender.rank);
+    renderRows(document.getElementById('lb-streak'),   lb.streaks,       'streak', ' hari', null, ranks.streak && ranks.streak.rank);
+    renderRows(document.getElementById('lb-lifetime'), lb.topCr,         'lifetime', ' CR', 'sepanjang waktu', ranks.lifetime && ranks.lifetime.rank);
+
+    document.getElementById('updatedAt').textContent = lb.updatedAt ? `Diperbarui: ${lb.updatedAt} WIB` : '';
+  } catch(e) {
+    ['lb-claim','lb-spender','lb-streak','lb-lifetime'].forEach(id => {
+      document.getElementById(id).innerHTML = '<div class="empty">Gagal memuat data. Coba refresh halaman.</div>';
+    });
+  }
+}
+
+loadLeaderboard();
+
+// ── Auto-refresh ──────────────────────────────────
+// Re-fetch tiap 60 detik biar data ga stuck di halaman yang dibuka lama.
+const REFRESH_INTERVAL_MS = 60_000;
+let refreshTimer = setInterval(loadLeaderboard, REFRESH_INTERVAL_MS);
+
+// Pause polling kalau tab lagi ga aktif (hemat request), lanjut + langsung
+// fetch ulang begitu user balik ke tab.
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    clearInterval(refreshTimer);
+  } else {
+    loadLeaderboard();
+    refreshTimer = setInterval(loadLeaderboard, REFRESH_INTERVAL_MS);
+  }
+});
+</script>
+</body>
+</html>

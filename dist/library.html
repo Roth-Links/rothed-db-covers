@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex,nofollow"/>
+  <meta name="description" content="Your purchased save data — RothedDB. Redownload anything you've already claimed with CR, free, anytime."/>
+  <title>My Savedata — RothedDB</title>
+
+  <!-- Favicon (same as main site) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzBhMGYxZSIvPjx0ZXh0IHg9IjE2IiB5PSIyMyIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjIiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmN2M5NDgiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlI8L3RleHQ+PC9zdmc+"/>
+  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzBhMGYxZSIvPjx0ZXh0IHg9IjE2IiB5PSIyMyIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjIiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmN2M5NDgiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlI8L3RleHQ+PC9zdmc+"/>
+  <meta name="theme-color" content="#0a0f1e"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+<style>
+:root {
+  --bg: #03050d; --bg2: #060a14; --bg3: #090e1a;
+  --card: #0b1020; --card-hi: #0f1628;
+  --border: #131d30; --border-hi: #1d2e50;
+  --gold: #f7c948; --gold-dim: #c49820;
+  --gold-glow: rgba(247,201,72,.18); --gold-faint: rgba(247,201,72,.06); --gold-line: rgba(247,201,72,.22);
+  --blue: #3d8eff; --green: #17d974; --red: #f04848;
+  --text: #d4e0f4; --text-dim: #a0bfdf; --text-muted: #7a96bc;
+  --radius: 12px;
+  --font-brand: 'Bebas Neue', sans-serif;
+  --font-head: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: radial-gradient(ellipse at 50% -10%, rgba(247,201,72,.05), transparent 55%), var(--bg);
+  color: var(--text); font-family: var(--font-body); font-weight: 500;
+  min-height: 100vh; -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+
+/* ── Header ─────────────────────────────────────────────── */
+.lib-header {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 22px; background: rgba(3,5,13,.85);
+  backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
+}
+.lib-logo {
+  font-family: var(--font-brand); font-size: 22px; letter-spacing: 1px;
+  color: var(--gold); text-decoration: none; flex-shrink: 0;
+}
+.lib-crumb { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+.lib-crumb b { color: var(--text-dim); font-weight: 600; }
+.lib-header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.lib-bal {
+  display: none; align-items: center; gap: 6px; padding: 7px 12px;
+  border-radius: 20px; background: var(--gold-faint); border: 1px solid var(--gold-line);
+  font-family: var(--font-mono); font-size: 12px; color: var(--gold); font-weight: 700;
+}
+.lib-btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
+  border-radius: 20px; border: 1px solid var(--gold-line); background: var(--gold-faint);
+  color: var(--gold); font-family: var(--font-head); font-size: 11px; font-weight: 700;
+  letter-spacing: .6px; text-transform: uppercase; cursor: pointer; text-decoration: none;
+  transition: background .15s;
+}
+.lib-btn:hover { background: rgba(247,201,72,.16); }
+.lib-btn-ghost {
+  border-color: var(--border-hi); background: transparent; color: var(--text-dim);
+}
+.lib-btn-ghost:hover { background: rgba(255,255,255,.05); }
+
+/* ── Page shell ─────────────────────────────────────────── */
+.lib-wrap { max-width: 920px; margin: 0 auto; padding: 36px 20px 80px; }
+.lib-title-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+.lib-title { font-family: var(--font-brand); font-size: 34px; letter-spacing: 1px; color: var(--text); line-height: 1; }
+.lib-title span { color: var(--gold); }
+.lib-sub { font-size: 12.5px; color: var(--text-muted); margin-top: 6px; max-width: 460px; line-height: 1.6; }
+.lib-search {
+  width: 100%; max-width: 260px; padding: 10px 14px; border-radius: 10px;
+  background: var(--card); border: 1px solid var(--border); color: var(--text);
+  font-family: var(--font-body); font-size: 13px; outline: none; transition: border-color .15s;
+}
+.lib-search:focus { border-color: var(--gold-line); }
+
+/* ── Grid / cards ───────────────────────────────────────── */
+.lib-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.lib-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px; display: flex; flex-direction: column; gap: 10px; transition: border-color .15s, transform .15s;
+}
+.lib-card:hover { border-color: var(--border-hi); transform: translateY(-2px); }
+.lib-card-top { display: flex; align-items: flex-start; gap: 10px; }
+.lib-card-icon {
+  width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 15px;
+  background: var(--gold-faint); border: 1px solid var(--gold-line);
+}
+.lib-card-name { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.35; word-break: break-word; }
+.lib-card-ext { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); }
+.lib-card-game { font-size: 10.5px; color: var(--gold-dim); margin-top: 2px; font-family: var(--font-mono); }
+.lib-card-plat {
+  display: inline-block; margin-top: 8px; padding: 2px 8px; border-radius: 20px;
+  background: rgba(61,142,255,.1); border: 1px solid rgba(61,142,255,.25);
+  font-family: var(--font-mono); font-size: 9.5px; color: var(--blue); letter-spacing: .4px;
+}
+.lib-card-actions { margin-top: auto; display: flex; gap: 8px; align-items: center; }
+.lib-dl-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 9px; border-radius: 9px; border: none; cursor: pointer;
+  background: linear-gradient(135deg, rgba(23,217,116,.18), rgba(23,217,116,.08));
+  border: 1px solid rgba(23,217,116,.35); color: var(--green);
+  font-family: var(--font-head); font-size: 11px; font-weight: 700; letter-spacing: .4px;
+  transition: background .15s;
+}
+.lib-dl-btn:hover { background: rgba(23,217,116,.28); }
+.lib-dl-btn:disabled { opacity: .55; cursor: default; }
+.lib-owned-tag { font-family: var(--font-mono); font-size: 9.5px; color: var(--text-muted); white-space: nowrap; }
+
+/* ── States: loading / empty / gate / error ────────────────── */
+.lib-state { text-align: center; padding: 70px 20px; color: var(--text-muted); }
+.lib-state-icon { font-size: 40px; margin-bottom: 14px; display: block; }
+.lib-state-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.lib-state-desc { font-size: 12.5px; line-height: 1.7; max-width: 340px; margin: 0 auto; }
+.lib-state-cta { margin-top: 18px; }
+.skel { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); height: 128px; animation: skelPulse 1.4s ease-in-out infinite; }
+@keyframes skelPulse { 0%,100% { opacity: .55; } 50% { opacity: .9; } }
+
+/* ── Login modal (compact) ─────────────────────────────────── */
+#lib-login-modal {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(3,5,13,.88); backdrop-filter: blur(8px);
+  align-items: center; justify-content: center; padding: 20px;
+}
+#lib-login-modal.open { display: flex; }
+.lib-modal-box {
+  width: 100%; max-width: 360px; background: linear-gradient(160deg,#0d1526,#080d1a);
+  border: 1px solid var(--gold-line); border-radius: 16px; padding: 28px 24px;
+  box-shadow: 0 24px 64px rgba(0,0,0,.7); text-align: center; position: relative;
+}
+.lib-modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; }
+.lib-modal-title { font-family: var(--font-brand); font-size: 22px; letter-spacing: 2px; color: var(--gold); margin-bottom: 4px; }
+.lib-modal-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+.lib-input {
+  width: 100%; padding: 11px 14px; border-radius: 10px; margin-bottom: 12px;
+  background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+  font-family: var(--font-body); font-size: 13px; outline: none; text-align: center;
+}
+.lib-input:focus { border-color: var(--gold-line); }
+.lib-modal-btn {
+  width: 100%; padding: 11px; border-radius: 10px; border: none; cursor: pointer;
+  background: linear-gradient(135deg,#f7c948,#d4920a); color: #0a0800;
+  font-family: var(--font-head); font-size: 12px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
+}
+.lib-modal-btn:disabled { opacity: .6; cursor: default; }
+.lib-modal-msg { font-size: 11.5px; margin-top: 10px; min-height: 14px; }
+.lib-modal-msg.err { color: var(--red); }
+.lib-modal-link { display: block; margin-top: 14px; font-size: 11px; color: var(--text-muted); background: none; border: none; cursor: pointer; text-decoration: underline; }
+
+/* ── Toast ──────────────────────────────────────────────── */
+#lib-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--card-hi); border: 1px solid var(--gold-line); border-radius: 10px;
+  padding: 11px 20px; font-size: 12.5px; color: var(--text); z-index: 600;
+  opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s;
+}
+#lib-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── Footer ─────────────────────────────────────────────── */
+.lib-footer {
+  border-top: 1px solid var(--border); padding: 22px 20px; text-align: center;
+  font-size: 11px; color: var(--text-muted);
+}
+.lib-footer a { color: var(--text-dim); text-decoration: none; margin: 0 8px; }
+.lib-footer a:hover { color: var(--gold); }
+
+@media (max-width: 560px) {
+  .lib-title { font-size: 26px; }
+  .lib-crumb { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="lib-header">
+  <a class="lib-logo" href="index.html">RothedDB</a>
+  <span class="lib-crumb">/ <b>My Savedata</b></span>
+  <div class="lib-header-right">
+    <span class="lib-bal" id="lib-bal-chip">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg>
+      <span id="lib-bal-num">0</span> cr
+    </span>
+    <button class="lib-btn" id="lib-login-btn" onclick="openLibLogin()">🔑 Login</button>
+    <button class="lib-btn lib-btn-ghost" id="lib-logout-btn" style="display:none" onclick="libLogout()">Logout</button>
+  </div>
+</header>
+
+<div class="lib-wrap">
+  <div class="lib-title-row">
+    <div>
+      <div class="lib-title">My <span>Savedata</span></div>
+      <div class="lib-sub">Semua savedata premium yang pernah kamu beli pakai CR. Redownload kapan aja, gratis — nggak dipotong CR lagi.</div>
+    </div>
+    <input id="lib-search" class="lib-search" type="text" placeholder="Cari savedata kamu…" oninput="libFilter(this.value)" style="display:none"/>
+  </div>
+
+  <!-- Logged-out gate -->
+  <div class="lib-state" id="lib-gate">
+    <span class="lib-state-icon">🔒</span>
+    <div class="lib-state-title">Login dulu untuk lihat savedata kamu</div>
+    <div class="lib-state-desc">Semua pembelian CR kamu tersimpan di akun. Login pakai email yang sama biar bisa lihat &amp; redownload kapan aja.</div>
+    <div class="lib-state-cta"><button class="lib-btn" onclick="openLibLogin()">🔑 Login</button></div>
+  </div>
+
+  <!-- Loading skeleton -->
+  <div class="lib-grid" id="lib-loading" style="display:none">
+    <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+  </div>
+
+  <!-- Empty (logged in, nothing owned) -->
+  <div class="lib-state" id="lib-empty" style="display:none">
+    <span class="lib-state-icon">📦</span>
+    <div class="lib-state-title">Belum ada savedata yang dibeli</div>
+    <div class="lib-state-desc">Klaim savedata premium pertamamu pakai CR dan bakal langsung muncul di sini, siap didownload ulang kapan aja.</div>
+    <div class="lib-state-cta"><a class="lib-btn" href="index.html">Browse Library →</a></div>
+  </div>
+
+  <!-- Error -->
+  <div class="lib-state" id="lib-error" style="display:none">
+    <span class="lib-state-icon">⚠️</span>
+    <div class="lib-state-title">Gagal memuat savedata</div>
+    <div class="lib-state-desc" id="lib-error-msg">Koneksi bermasalah. Coba lagi.</div>
+    <div class="lib-state-cta"><button class="lib-btn lib-btn-ghost" onclick="loadLibrary()">Coba Lagi</button></div>
+  </div>
+
+  <!-- Grid -->
+  <div class="lib-grid" id="lib-grid" style="display:none"></div>
+</div>
+
+<footer class="lib-footer">
+  <a href="index.html">Home</a>·<a href="pricing.html">Pricing</a>·<a href="contact.html">Contact</a>·<a href="tos.html">Terms</a>
+  <div style="margin-top:8px">© <span id="lib-year"></span> RothedDB</div>
+</footer>
+
+<!-- Login modal -->
+<div id="lib-login-modal">
+  <div class="lib-modal-box">
+    <button class="lib-modal-close" onclick="closeLibLogin()">✕</button>
+
+    <div id="lib-step-email">
+      <div class="lib-modal-title">VAULT</div>
+      <div class="lib-modal-sub">Login to see your purchased savedata</div>
+      <input class="lib-input" type="email" id="lib-email-input" placeholder="your@email.com" autocomplete="email"/>
+      <button class="lib-modal-btn" id="lib-send-btn" onclick="libSendOtp()">Send Login Code</button>
+      <div class="lib-modal-msg" id="lib-email-msg"></div>
+    </div>
+
+    <div id="lib-step-otp" style="display:none">
+      <div class="lib-modal-title">VAULT</div>
+      <div class="lib-modal-sub">Enter the 6-digit code sent to<br><b id="lib-otp-email-label" style="color:var(--gold)"></b></div>
+      <input class="lib-input" type="text" inputmode="numeric" maxlength="6" id="lib-otp-input" placeholder="000000"/>
+      <button class="lib-modal-btn" id="lib-verify-btn" onclick="libVerifyOtp()">Verify &amp; Login</button>
+      <div class="lib-modal-msg" id="lib-otp-msg"></div>
+      <button class="lib-modal-link" onclick="libBackToEmail()">← Use a different email</button>
+    </div>
+  </div>
+</div>
+
+<div id="lib-toast"></div>
+
+<script>
+// Reuses the SAME backend/session as index.html — Google Apps Script (GAS)
+// backed by a Google Sheet. No new backend endpoint needed: "owned" flag is
+// already returned per-file by the existing getpremiumfiles action.
+const GAS_URL  = "https://script.google.com/macros/s/AKfycbxPxl4tEsqX7r5bQmtolk9K9AhSHYypG0lPv3k-TXii4FCQ49vsym_6kK6MPzyK6QpI/exec"; // ← same as index.html, keep in sync
+const SESS_KEY = "rdb_vault_sess";
+const SESS_EXPIRY = 30 * 24 * 60 * 60 * 1000;
+
+const esc   = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+// Escapes for interpolating INTO a JS string literal that itself sits inside
+// a double-quoted HTML attribute (onclick="..."). Must escape backslash,
+// single quote AND double quote — a lone .replace(/'/g,...) is not enough,
+// since an unescaped " would break out of the onclick="" attribute itself.
+// Kept in sync with template.html's escJs().
+const escJs = s => String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"');
+
+let _sess = null;
+let _ownedFiles = [];
+
+function _loadSess() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(SESS_KEY) || "null");
+    if (!raw) return null;
+    if (Date.now() > raw.expiry) { localStorage.removeItem(SESS_KEY); return null; }
+    return raw;
+  } catch(e) { return null; }
+}
+function _saveSess(email, sessionToken, balance, lifetimeCr, lastTopupAt) {
+  localStorage.setItem(SESS_KEY, JSON.stringify({
+    email, sessionToken, balance: Number(balance), lifetimeCr: Number(lifetimeCr||0),
+    lastTopupAt: lastTopupAt || null, expiry: Date.now() + SESS_EXPIRY,
+  }));
+}
+function _clearSess() { localStorage.removeItem(SESS_KEY); }
+
+function toast(msg) {
+  const el = document.getElementById('lib-toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(window._libToastTimer);
+  window._libToastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+function _setState(state) {
+  // state: 'gate' | 'loading' | 'empty' | 'error' | 'grid'
+  document.getElementById('lib-gate').style.display    = state === 'gate'    ? 'block' : 'none';
+  document.getElementById('lib-loading').style.display  = state === 'loading' ? 'grid'  : 'none';
+  document.getElementById('lib-empty').style.display    = state === 'empty'   ? 'block' : 'none';
+  document.getElementById('lib-error').style.display    = state === 'error'   ? 'block' : 'none';
+  document.getElementById('lib-grid').style.display     = state === 'grid'    ? 'grid'  : 'none';
+  document.getElementById('lib-search').style.display   = state === 'grid'    ? 'block' : 'none';
+}
+
+function _renderLoggedIn() {
+  document.getElementById('lib-login-btn').style.display  = 'none';
+  document.getElementById('lib-logout-btn').style.display = 'inline-flex';
+  document.getElementById('lib-bal-chip').style.display    = 'inline-flex';
+  document.getElementById('lib-bal-num').textContent       = Number(_sess.balance).toLocaleString();
+}
+function _renderLoggedOut() {
+  document.getElementById('lib-login-btn').style.display  = 'inline-flex';
+  document.getElementById('lib-logout-btn').style.display = 'none';
+  document.getElementById('lib-bal-chip').style.display    = 'none';
+}
+
+async function loadLibrary() {
+  if (!_sess) { _setState('gate'); return; }
+  _setState('loading');
+  try {
+    const { email, sessionToken } = _sess;
+    const res  = await fetch(`${GAS_URL}?action=getpremiumfiles&email=${encodeURIComponent(email)}&sessionToken=${encodeURIComponent(sessionToken)}`, { cache: "no-store" });
+    let data;
+    try { data = await res.json(); }
+    catch(_) { document.getElementById('lib-error-msg').textContent = 'Server returned an unexpected response. Try again later.'; _setState('error'); return; }
+
+    if (data.status === 'unauthorized' || data.status === 'invalid_session') {
+      libLogout(); return;
+    }
+    if (data.status !== 'ok') {
+      document.getElementById('lib-error-msg').textContent = data.message || 'Unknown error.';
+      _setState('error'); return;
+    }
+
+    // NOTE (security): this filter only controls what's DISPLAYED. It is
+    // NOT the security boundary. getpremiumfiles returns `id` for every
+    // premium file to any logged-in user (owned or not) — so the ownership/
+    // payment check MUST happen server-side, inside the GAS getdownloadurl
+    // handler, by looking up (email, fileId) against the purchases sheet.
+    // Never trust the client-side `owned` flag, a client-sent `price`, or
+    // the fact that a fileId only appears on this page.
+    _ownedFiles = (data.files || []).filter(f => f.owned);
+    if (!_ownedFiles.length) { _setState('empty'); return; }
+    _renderGrid(_ownedFiles);
+    _setState('grid');
+  } catch(e) {
+    document.getElementById('lib-error-msg').textContent = navigator.onLine ? 'Network error. Try again.' : '📶 You appear to be offline.';
+    _setState('error');
+  }
+}
+
+function _renderGrid(files) {
+  const grid = document.getElementById('lib-grid');
+  grid.innerHTML = files.map(f => {
+    const displayName = f.name.replace(/\.[^.]+$/, '');
+    const ext         = f.name.includes('.') ? f.name.split('.').pop().toLowerCase() : '';
+    const gameTitle   = f.gameTitle || '';
+    const platform    = f.platform  || '';
+    const fileId      = f.id || '';
+    return `
+      <div class="lib-card" data-name="${esc((displayName + ' ' + gameTitle).toLowerCase())}">
+        <div class="lib-card-top">
+          <div class="lib-card-icon">📥</div>
+          <div style="min-width:0">
+            <div class="lib-card-name">${esc(displayName)}${ext ? ` <span class="lib-card-ext">.${esc(ext)}</span>` : ''}</div>
+            ${gameTitle ? `<div class="lib-card-game">👑 ${esc(gameTitle)}</div>` : ''}
+            ${platform ? `<span class="lib-card-plat">${esc(platform)}</span>` : ''}
+          </div>
+        </div>
+        <div class="lib-card-actions">
+          ${fileId
+            ? `<button class="lib-dl-btn" onclick="redownload('${escJs(fileId)}', this)">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Redownload
+              </button>`
+            : `<button class="lib-dl-btn" disabled title="Missing file reference — contact support">Unavailable</button>`
+          }
+          <span class="lib-owned-tag">owned</span>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function libFilter(q) {
+  const ql = q.trim().toLowerCase();
+  document.querySelectorAll('.lib-card').forEach(card => {
+    card.style.display = !ql || card.dataset.name.includes(ql) ? '' : 'none';
+  });
+}
+
+async function redownload(fileId, btn) {
+  if (!_sess || !fileId) return;
+  const { email, sessionToken } = _sess;
+  btn.disabled = true;
+  const origHTML = btn.innerHTML;
+  btn.innerHTML = 'Downloading…';
+  try {
+    const res  = await fetch(`${GAS_URL}?action=getdownloadurl&email=${encodeURIComponent(email)}&sessionToken=${encodeURIComponent(sessionToken)}&fileId=${encodeURIComponent(fileId)}`, { cache: "no-store" });
+    if (!res.ok) throw new Error('bad_response');
+    const data = await res.json();
+    if (data.status === 'ok') {
+      const bytes = Uint8Array.from(atob(data.data), c => c.charCodeAt(0));
+      const blob  = new Blob([bytes], { type: data.mimeType });
+      const url   = URL.createObjectURL(blob);
+      const a     = document.createElement('a');
+      a.href = url; a.download = data.fileName; a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      if (typeof data.balance === 'number') {
+        _sess.balance = data.balance;
+        _saveSess(_sess.email, _sess.sessionToken, data.balance, _sess.lifetimeCr, _sess.lastTopupAt);
+        document.getElementById('lib-bal-num').textContent = data.balance.toLocaleString();
+      }
+      toast('📥 Downloaded — it\'s yours, no CR charged.');
+    } else if (data.status === 'unauthorized') {
+      toast('Session expired — please login again.');
+      libLogout();
+    } else {
+      toast('Download failed. Please try again.');
+    }
+  } catch(e) {
+    toast(navigator.onLine ? 'Network error. Please try again.' : '📶 You appear to be offline.');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = origHTML;
+  }
+}
+
+// ── Login modal ──────────────────────────────────────────
+function openLibLogin()  { document.getElementById('lib-login-modal').classList.add('open'); }
+function closeLibLogin() { document.getElementById('lib-login-modal').classList.remove('open'); }
+function libBackToEmail() {
+  document.getElementById('lib-step-otp').style.display   = 'none';
+  document.getElementById('lib-step-email').style.display = 'block';
+  document.getElementById('lib-otp-input').value = '';
+  _msg('lib-otp-msg', '');
+}
+function _msg(id, text, isErr) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = 'lib-modal-msg' + (isErr ? ' err' : '');
+}
+
+async function libSendOtp() {
+  const email = document.getElementById('lib-email-input').value.trim().toLowerCase();
+  const btn   = document.getElementById('lib-send-btn');
+  if (!email || !email.includes('@')) { _msg('lib-email-msg', 'Please enter a valid email.', true); return; }
+  btn.disabled = true; btn.textContent = 'Sending…'; _msg('lib-email-msg', '');
+  try {
+    const res  = await fetch(`${GAS_URL}?action=sendotp&email=${encodeURIComponent(email)}`, { cache: "no-store" });
+    const data = await res.json();
+    if (data.status === 'sent') {
+      document.getElementById('lib-otp-email-label').textContent = email;
+      document.getElementById('lib-step-email').style.display = 'none';
+      document.getElementById('lib-step-otp').style.display   = 'block';
+      document.getElementById('lib-otp-input').focus();
+    } else if (data.status === 'no_account') {
+      _msg('lib-email-msg', 'No premium account found for this email.', true);
+    } else if (data.status === 'rate_limited') {
+      _msg('lib-email-msg', 'Too many requests. Try again in 1 hour.', true);
+    } else {
+      _msg('lib-email-msg', 'Failed to send code. Try again.', true);
+    }
+  } catch(e) { _msg('lib-email-msg', 'Network error. Try again.', true); }
+  btn.disabled = false; btn.textContent = 'Send Login Code';
+}
+
+async function libVerifyOtp() {
+  const email = document.getElementById('lib-otp-email-label').textContent.trim();
+  const otp   = document.getElementById('lib-otp-input').value.trim();
+  const btn   = document.getElementById('lib-verify-btn');
+  if (!otp || otp.length !== 6) { _msg('lib-otp-msg', 'Enter the 6-digit code.', true); return; }
+  btn.disabled = true; btn.textContent = 'Verifying…'; _msg('lib-otp-msg', '');
+  try {
+    const res  = await fetch(`${GAS_URL}?action=verifyotp&email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`, { cache: "no-store" });
+    const data = await res.json();
+    if (data.status === 'success') {
+      _sess = { email: data.email, sessionToken: data.sessionToken, balance: data.balance, lifetimeCr: data.lifetimeCr || 0, lastTopupAt: data.lastTopupAt || null };
+      _saveSess(data.email, data.sessionToken, data.balance, data.lifetimeCr || 0, data.lastTopupAt || null);
+      closeLibLogin();
+      _renderLoggedIn();
+      loadLibrary();
+    } else if (data.status === 'wrong_otp') {
+      _msg('lib-otp-msg', 'Wrong code. Check your email and try again.', true);
+    } else {
+      _msg('lib-otp-msg', 'Verification failed. Try again.', true);
+    }
+  } catch(e) { _msg('lib-otp-msg', 'Network error. Try again.', true); }
+  btn.disabled = false; btn.textContent = 'Verify & Login';
+}
+
+function libLogout() {
+  _clearSess();
+  _sess = null;
+  _renderLoggedOut();
+  _setState('gate');
+}
+
+document.getElementById('lib-login-modal').addEventListener('click', function(e) { if (e.target === this) closeLibLogin(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLibLogin(); });
+
+document.getElementById('lib-year').textContent = new Date().getFullYear();
+
+// ── Init ──────────────────────────────────────────────────
+_sess = _loadSess();
+if (_sess) { _renderLoggedIn(); loadLibrary(); }
+else { _renderLoggedOut(); _setState('gate'); }
+</script>
+
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API = Tawk_API || {};
+Tawk_API.customStyle = {
+  visibility: {
+    desktop: { position: 'br', xOffset: 20, yOffset: 20 },
+    mobile:  { position: 'br', xOffset: 10, yOffset: 90 }
+  }
+};
+var Tawk_LoadStart = new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/6a7d83a0aa26501d4897c623/1jvt4kbdh';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+</body>
+</html>

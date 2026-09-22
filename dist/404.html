@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex"/>
+  <title>404 — Page Not Found · RothedDB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400&display=swap&subset=latin" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #03050d; --bg3: #090e1a; --card: #0b1020;
+      --border: #131d30; --border-hi: #1d2e50;
+      --gold: #f7c948; --gold-dim: #c49820;
+      --gold-faint: rgba(247,201,72,.06); --gold-line: rgba(247,201,72,.22);
+      --text: #c8d6f0; --text-dim: #4d6380; --text-muted: #253044;
+      --radius: 12px;
+      --font-brand: 'Bebas Neue', sans-serif;
+      --font-head:  'Rajdhani', sans-serif;
+      --font-body:  'DM Sans', sans-serif;
+      --font-mono:  'JetBrains Mono', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--text); font-family: var(--font-body);
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 24px; -webkit-font-smoothing: antialiased;
+    }
+
+    /* faint grid bg */
+    body::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px; opacity: .35;
+    }
+
+    .wrap { max-width: 480px; width: 100%; text-align: center; position: relative; }
+
+    .code {
+      font-family: var(--font-brand);
+      font-size: clamp(100px, 24vw, 168px);
+      letter-spacing: 8px; line-height: 1; user-select: none;
+      background: linear-gradient(160deg, #1a2540 0%, #2b3c5e 50%, #1a2540 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 2px;
+    }
+
+    .title {
+      font-family: var(--font-brand);
+      font-size: clamp(28px, 7vw, 48px); letter-spacing: 4px; line-height: 1;
+      background: linear-gradient(145deg, #e8b020 0%, #f7c948 42%, #fff5b0 62%, #c49820 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 20px;
+    }
+
+    .sub {
+      font-size: 13.5px; line-height: 1.75; color: var(--text-dim);
+      margin-bottom: 36px; max-width: 360px; margin-inline: auto;
+    }
+
+    .btn-home {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, #c49820, #f7c948);
+      color: #0a0800; font-family: var(--font-head); font-size: 13px;
+      font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      text-decoration: none; padding: 12px 28px; border-radius: 10px;
+      transition: opacity .15s, transform .12s; margin-bottom: 28px;
+    }
+    .btn-home:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-home:active { transform: translateY(0); }
+
+    .quick-links {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; flex-wrap: wrap;
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px;
+      color: var(--text-muted); margin-bottom: 48px;
+    }
+    .quick-links a {
+      color: var(--gold-dim); text-decoration: none; transition: color .15s;
+    }
+    .quick-links a:hover { color: var(--gold); }
+    .quick-links span { opacity: .3; }
+
+    .brand {
+      font-family: var(--font-brand); font-size: 16px;
+      letter-spacing: 3px; color: var(--text-muted);
+      text-decoration: none; transition: color .15s;
+    }
+    .brand:hover { color: var(--gold-dim); }
+    .mono {
+      font-family: var(--font-mono); font-size: 9px;
+      letter-spacing: 2px; color: var(--text-muted);
+      opacity: .5; margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="code">404</div>
+    <div class="title">Save Not Found</div>
+    <p class="sub">
+      The page you're looking for doesn't exist — the URL might be wrong,
+      or the save file was moved.
+    </p>
+
+    <div>
+      <a class="btn-home" href="/index.html">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        Back to Library
+      </a>
+    </div>
+
+    <div class="quick-links">
+      <a href="/request.html">Request a Save File</a>
+      <span>·</span>
+      <a href="/tos.html">Terms of Use</a>
+    </div>
+
+    <a class="brand" href="/index.html">RothedDB</a>
+    <div class="mono">Game Save Data Library</div>
+  </div>
+</body>
+</html>

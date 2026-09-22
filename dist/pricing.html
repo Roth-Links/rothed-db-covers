@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="RothedDB — CR Credit System. Earn free credits daily or top up to unlock premium save files."/>
+  <title>RothedDB — Credits & Pricing</title>
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzBhMGYxZSIvPjx0ZXh0IHg9IjE2IiB5PSIyMyIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjIiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmN2M5NDgiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlI8L3RleHQ+PC9zdmc+"/>
+  <meta name="theme-color" content="#0a0f1e"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --bg:           #03050d;
+      --bg2:          #060a14;
+      --bg3:          #090e1a;
+      --card:         #0b1020;
+      --card-hi:      #0f1628;
+      --border:       #131d30;
+      --border-hi:    #1d2e50;
+      --gold:         #f7c948;
+      --gold-dim:     #c49820;
+      --gold-glow:    rgba(247,201,72,.18);
+      --gold-faint:   rgba(247,201,72,.06);
+      --gold-line:    rgba(247,201,72,.22);
+      --blue:         #3d8eff;
+      --blue-dim:     rgba(61,142,255,.12);
+      --green:        #17d974;
+      --green-dim:    rgba(23,217,116,.12);
+      --red:          #f04848;
+      --red-dim:      rgba(240,72,72,.12);
+      --amber:        #f0a020;
+      --text:         #d4e0f4;
+      --text-dim:     #a0bfdf;
+      --text-muted:   #7a96bc;
+      --radius:       12px;
+      --font-brand:   'Bebas Neue', sans-serif;
+      --font-head:    'Outfit', sans-serif;
+      --font-body:    'Inter', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 500;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── TOPNAV ── */
+    .topnav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(3,5,13,.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 52px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .topnav-brand {
+      font-family: var(--font-brand);
+      font-size: 22px; letter-spacing: 2px;
+      color: var(--gold); text-decoration: none;
+    }
+    .topnav-links { display: flex; align-items: center; gap: 8px; }
+    .topnav-link {
+      font-family: var(--font-mono); font-size: 11px;
+      color: var(--text-muted); text-decoration: none;
+      padding: 6px 12px; border-radius: 8px;
+      border: 1px solid transparent;
+      transition: all .15s;
+    }
+    .topnav-link:hover { color: var(--text); background: rgba(255,255,255,.05); }
+    .topnav-link.active {
+      color: var(--gold);
+      border-color: var(--gold-line);
+      background: var(--gold-faint);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 72px 24px 56px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(247,201,72,.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--gold); opacity: .7;
+      margin-bottom: 16px; display: block;
+    }
+    .hero-title {
+      font-family: var(--font-brand);
+      font-size: clamp(52px, 8vw, 88px);
+      letter-spacing: 3px; line-height: 1;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+    .hero-title span { color: var(--gold); }
+    .hero-sub {
+      font-size: 15px; color: var(--text-muted);
+      max-width: 480px; margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+    .hero-badges {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; flex-wrap: wrap;
+    }
+    .hero-badge {
+      font-family: var(--font-mono); font-size: 11px;
+      padding: 5px 12px; border-radius: 20px;
+      border: 1px solid var(--border-hi);
+      color: var(--text-muted);
+    }
+    .hero-badge.gold {
+      border-color: var(--gold-line);
+      color: var(--gold);
+      background: var(--gold-faint);
+    }
+
+    /* ── SECTION WRAPPER ── */
+    .section { max-width: 900px; margin: 0 auto; padding: 0 24px 64px; }
+    .section-title {
+      font-family: var(--font-head); font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 24px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(to right, var(--border-hi), transparent);
+    }
+
+    /* ── HOW CR WORKS ── */
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px; margin-bottom: 0;
+    }
+    .how-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color .15s;
+    }
+    .how-card:hover { border-color: var(--border-hi); }
+    .how-icon { font-size: 24px; margin-bottom: 10px; display: block; }
+    .how-title {
+      font-family: var(--font-head); font-size: 13px; font-weight: 700;
+      color: var(--text); margin-bottom: 6px;
+    }
+    .how-desc {
+      font-size: 12px; color: var(--text-muted); line-height: 1.6;
+    }
+
+    /* ── RARITY TIERS ── */
+    .rarity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+    }
+    .rarity-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 20px 20px 18px;
+      position: relative; overflow: hidden;
+      border: 1px solid var(--border);
+      transition: transform .15s, border-color .15s;
+    }
+    .rarity-card:hover { transform: translateY(-2px); border-color: var(--border-hi); }
+    .rarity-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    }
+    .rc-common::before  { background: #94a3b8; }
+    .rc-rare::before    { background: var(--blue); }
+    .rc-epic::before    { background: #a855f7; }
+    .rc-legendary::before { background: linear-gradient(90deg, var(--gold), #ff9d2f); }
+
+    .rarity-label {
+      font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+    }
+    .rc-common  .rarity-label { color: #94a3b8; }
+    .rc-rare    .rarity-label { color: var(--blue); }
+    .rc-epic    .rarity-label { color: #a855f7; }
+    .rc-legendary .rarity-label { color: var(--gold); }
+
+    .rarity-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      display: inline-block; flex-shrink: 0;
+    }
+    .rc-common  .rarity-dot { background: #94a3b8; }
+    .rc-rare    .rarity-dot { background: var(--blue); }
+    .rc-epic    .rarity-dot { background: #a855f7; }
+    .rc-legendary .rarity-dot { background: var(--gold); box-shadow: 0 0 6px rgba(247,201,72,.6); }
+
+    .rarity-price {
+      font-family: var(--font-brand); font-size: 36px; letter-spacing: 1px;
+      line-height: 1; margin-bottom: 6px;
+    }
+    .rc-common  .rarity-price { color: #94a3b8; }
+    .rc-rare    .rarity-price { color: var(--blue); }
+    .rc-epic    .rarity-price { color: #a855f7; }
+    .rc-legendary .rarity-price { color: var(--gold); }
+
+    .rarity-unit {
+      font-family: var(--font-mono); font-size: 11px;
+      color: var(--text-muted); margin-bottom: 12px;
+    }
+    .rarity-desc {
+      font-size: 12px; color: var(--text-muted); line-height: 1.6;
+    }
+    .rarity-example {
+      margin-top: 10px; padding-top: 10px;
+      border-top: 1px solid var(--border);
+      font-size: 11px; color: var(--text-dim);
+      font-family: var(--font-mono);
+    }
+
+    /* ── LEVEL SYSTEM ── */
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+    }
+    .level-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      text-align: center;
+      transition: border-color .15s;
+      position: relative;
+    }
+    .level-card:hover { border-color: var(--border-hi); }
+    .level-card.current-tier {
+      border-color: var(--gold-line);
+      background: linear-gradient(160deg, #0e1628, #0b1020);
+    }
+    .current-tier-badge {
+      position: absolute; top: -1px; right: 12px;
+      font-family: var(--font-mono); font-size: 9px; font-weight: 500;
+      letter-spacing: 1px; text-transform: uppercase;
+      background: var(--gold); color: #0a0800;
+      padding: 2px 7px; border-radius: 0 0 6px 6px;
+    }
+    .level-icon { font-size: 28px; margin-bottom: 8px; }
+    .level-name {
+      font-family: var(--font-head); font-size: 13px; font-weight: 700;
+      color: var(--text); margin-bottom: 4px;
+    }
+    .level-num {
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 1px; margin-bottom: 10px;
+    }
+    .lv-1 .level-num { color: #94a3b8; }
+    .lv-2 .level-num { color: var(--blue); }
+    .lv-3 .level-num { color: #a855f7; }
+    .lv-4 .level-num { color: var(--gold); }
+    .lv-5 .level-num { color: #ff9d2f; }
+
+    .level-req {
+      font-size: 11px; color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .level-score {
+      font-family: var(--font-mono); font-size: 10px;
+      color: var(--text-dim); margin-top: 6px;
+      padding-top: 6px; border-top: 1px solid var(--border);
+    }
+
+    /* ── DAILY EARN ── */
+    .earn-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex; gap: 20px; align-items: flex-start;
+      transition: border-color .15s;
+    }
+    .earn-card:hover { border-color: var(--border-hi); }
+    .earn-card + .earn-card { margin-top: 10px; }
+    .earn-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .earn-icon.gold-bg { background: var(--gold-faint); border: 1px solid var(--gold-line); }
+    .earn-icon.blue-bg { background: var(--blue-dim); border: 1px solid rgba(61,142,255,.25); }
+    .earn-icon.green-bg { background: var(--green-dim); border: 1px solid rgba(23,217,116,.25); }
+    .earn-body { flex: 1; min-width: 0; }
+    .earn-title {
+      font-family: var(--font-head); font-size: 15px; font-weight: 700;
+      color: var(--text); margin-bottom: 4px;
+    }
+    .earn-desc {
+      font-size: 13px; color: var(--text-muted); line-height: 1.6;
+    }
+    .earn-cr {
+      font-family: var(--font-brand); font-size: 28px;
+      color: var(--gold); letter-spacing: 1px;
+      flex-shrink: 0; align-self: center;
+    }
+    .earn-cr span { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0; }
+
+    /* ── TOPUP CARDS ── */
+    .topup-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .topup-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      text-align: center;
+      position: relative; overflow: hidden;
+      transition: transform .15s, border-color .15s;
+    }
+    .topup-card:hover { transform: translateY(-3px); border-color: var(--border-hi); }
+    .topup-card.featured {
+      border-color: var(--gold-line);
+      background: linear-gradient(160deg, #0e1628, #0b1020);
+    }
+    .topup-card.featured::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(247,201,72,.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .topup-badge {
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      font-family: var(--font-mono); font-size: 9px; font-weight: 500;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      background: var(--gold); color: #0a0800;
+      padding: 3px 14px; border-radius: 0 0 8px 8px;
+    }
+    .topup-platform {
+      font-size: 26px; margin-bottom: 10px; margin-top: 8px;
+    }
+    .topup-name {
+      font-family: var(--font-head); font-size: 18px; font-weight: 700;
+      color: var(--text); margin-bottom: 6px;
+    }
+    .topup-sub {
+      font-size: 12px; color: var(--text-muted);
+      line-height: 1.6; margin-bottom: 20px;
+    }
+    .topup-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 10px 24px; border-radius: 20px;
+      font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+      letter-spacing: .5px; text-decoration: none;
+      border: 1px solid var(--gold-line);
+      color: var(--gold); background: var(--gold-faint);
+      transition: all .15s; cursor: pointer;
+    }
+    .topup-btn:hover { background: rgba(247,201,72,.14); transform: translateY(-1px); }
+    .topup-btn.primary {
+      background: linear-gradient(135deg, #f7c948, #d4920a);
+      color: #0a0800; border: none; font-weight: 700;
+    }
+    .topup-btn.primary:hover { filter: brightness(1.1); }
+    .topup-note {
+      margin-top: 12px; font-size: 11px; color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+    .topup-note a { color: var(--gold); text-decoration: none; }
+
+    /* ── COMPARE TABLE ── */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .compare-table th {
+      font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text-muted); padding: 10px 16px;
+      text-align: left; border-bottom: 1px solid var(--border);
+    }
+    .compare-table th:not(:first-child) { text-align: center; }
+    .compare-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-dim);
+      vertical-align: middle;
+    }
+    .compare-table td:not(:first-child) { text-align: center; }
+    .compare-table tr:hover td { background: rgba(255,255,255,.02); }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table .feature-name {
+      color: var(--text); font-weight: 500;
+    }
+    .compare-table .feature-sub {
+      font-size: 11px; color: var(--text-muted);
+      font-family: var(--font-mono); margin-top: 2px;
+    }
+    .check { color: var(--green); font-size: 16px; }
+    .cross { color: var(--text-muted); opacity: .3; font-size: 16px; }
+    .val-gold {
+      font-family: var(--font-mono); font-size: 12px;
+      color: var(--gold); font-weight: 500;
+    }
+    .val-blue {
+      font-family: var(--font-mono); font-size: 12px;
+      color: var(--blue);
+    }
+    .table-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .table-col-header {
+      background: var(--card-hi);
+    }
+    .table-col-header th {
+      padding: 14px 16px;
+    }
+
+    /* ── FAQ ── */
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-item:first-child { border-top: 1px solid var(--border); }
+    .faq-q {
+      width: 100%; background: none; border: none;
+      padding: 18px 4px; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      font-family: var(--font-body); font-size: 14px; font-weight: 600;
+      color: var(--text); text-align: left; gap: 12px;
+      transition: color .15s;
+    }
+    .faq-q:hover { color: var(--gold); }
+    .faq-q svg { flex-shrink: 0; transition: transform .2s; color: var(--text-muted); }
+    .faq-item.open .faq-q svg { transform: rotate(180deg); }
+    .faq-a {
+      display: none; padding: 0 4px 18px;
+      font-size: 13px; color: var(--text-muted); line-height: 1.7;
+    }
+    .faq-item.open .faq-a { display: block; }
+
+    /* ── CTA BOTTOM ── */
+    .cta-bottom {
+      text-align: center;
+      padding: 56px 24px 72px;
+      position: relative; overflow: hidden;
+      border-top: 1px solid var(--border);
+    }
+    .cta-bottom::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 50% 100%, rgba(247,201,72,.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-title {
+      font-family: var(--font-brand); font-size: clamp(36px, 6vw, 60px);
+      letter-spacing: 2px; color: var(--text);
+      margin-bottom: 12px;
+    }
+    .cta-title span { color: var(--gold); }
+    .cta-sub {
+      font-size: 14px; color: var(--text-muted);
+      margin-bottom: 28px; line-height: 1.6;
+    }
+    .cta-btns {
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; flex-wrap: wrap;
+    }
+    .cta-btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 28px; border-radius: 24px;
+      background: linear-gradient(135deg, #f7c948, #d4920a);
+      color: #0a0800; font-family: var(--font-head);
+      font-size: 14px; font-weight: 700;
+      letter-spacing: .5px; text-decoration: none;
+      transition: filter .15s, transform .15s;
+    }
+    .cta-btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
+    .cta-btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 24px;
+      border: 1px solid var(--border-hi);
+      color: var(--text-dim); font-family: var(--font-mono);
+      font-size: 12px; text-decoration: none;
+      transition: all .15s;
+    }
+    .cta-btn-secondary:hover { border-color: var(--gold-line); color: var(--gold); }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+      margin: 0 24px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 20px 24px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 20px; flex-wrap: wrap;
+      border-top: 1px solid var(--border);
+    }
+    footer a {
+      font-family: var(--font-mono); font-size: 11px;
+      color: var(--text-muted); text-decoration: none;
+      transition: color .15s;
+    }
+    footer a:hover { color: var(--gold); }
+
+    /* ── STREAK FORMULA ── */
+    .formula-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      font-family: var(--font-mono); font-size: 13px;
+      color: var(--text-dim); line-height: 1.8;
+      margin-bottom: 16px;
+    }
+    .formula-box .hi { color: var(--gold); font-weight: 500; }
+    .formula-box .blue { color: var(--blue); }
+    .formula-box .green { color: var(--green); }
+
+    /* ── EXPIRY NOTICE ── */
+    .notice-box {
+      background: rgba(240,160,32,.06);
+      border: 1px solid rgba(240,160,32,.25);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      font-size: 12px; color: var(--text-muted);
+      display: flex; gap: 10px; align-items: flex-start;
+      line-height: 1.6;
+    }
+    .notice-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .topnav-links { gap: 4px; }
+      .topnav-link { padding: 5px 8px; }
+      .rarity-grid { grid-template-columns: repeat(2, 1fr); }
+      .level-grid { grid-template-columns: repeat(2, 1fr); }
+      .topup-grid { grid-template-columns: 1fr; }
+      .earn-card { flex-direction: row; }
+      .earn-cr { align-self: center; }
+      .compare-table { font-size: 12px; }
+      .compare-table th, .compare-table td { padding: 10px 10px; }
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="topnav">
+  <a href="index.html" class="topnav-brand">RothedDB</a>
+  <div class="topnav-links">
+    <a href="index.html" class="topnav-link">← Library</a>
+    <a href="request.html" class="topnav-link">Request</a>
+    <a href="pricing.html" class="topnav-link active">Credits</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <span class="hero-eyebrow">⭐ CR Credit System</span>
+  <h1 class="hero-title">EARN.<br><span>UNLOCK.</span><br>PLAY.</h1>
+  <p class="hero-sub">
+    RothedDB runs on CR — credits you earn for free every day just by browsing the library.
+    No subscription. No paywall. Just show up.
+  </p>
+  <div class="hero-badges">
+    <span class="hero-badge gold">🎲 Daily Free Roll</span>
+    <span class="hero-badge">⭐ CR-gated saves</span>
+    <span class="hero-badge">500+ titles</span>
+    <span class="hero-badge">PS2 · PS3 · PS4 · PSP · Switch · PC</span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HOW CR WORKS -->
+<section class="section" style="padding-top:48px;">
+  <div class="section-title">How It Works</div>
+  <div class="how-grid">
+    <div class="how-card">
+      <span class="how-icon">📥</span>
+      <div class="how-title">Download a Save</div>
+      <div class="how-desc">Any free save triggers your daily CR roll. Download, collect your credits, done.</div>
+    </div>
+    <div class="how-card">
+      <span class="how-icon">🎲</span>
+      <div class="how-title">Roll Your Credits</div>
+      <div class="how-desc">Every day you get a free CR roll. One roll per account per day, resets at midnight.</div>
+    </div>
+    <div class="how-card">
+      <span class="how-icon">🔥</span>
+      <div class="how-title">Build Your Streak</div>
+      <div class="how-desc">Come back daily to keep your streak alive. Higher streak = higher level = better rewards.</div>
+    </div>
+    <div class="how-card">
+      <span class="how-icon">🔓</span>
+      <div class="how-title">Spend on Premium</div>
+      <div class="how-desc">Use your CR balance to unlock premium save files — 100% completion, max stats, and more.</div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- SAVE RARITY & PRICES -->
+<section class="section">
+  <div class="section-title">Save File Rarity</div>
+  <div class="rarity-grid">
+    <div class="rarity-card rc-common">
+      <div class="rarity-label"><span class="rarity-dot"></span>Common</div>
+      <div class="rarity-price">FREE</div>
+      <div class="rarity-unit">No CR required</div>
+      <div class="rarity-desc">Standard saves — progress-only, basic completion, or early-game states.</div>
+      <div class="rarity-example">e.g. Mid-game progress, story saves</div>
+    </div>
+    <div class="rarity-card rc-rare">
+      <div class="rarity-label"><span class="rarity-dot"></span>Rare</div>
+      <div class="rarity-price">🔒 CR</div>
+      <div class="rarity-unit">See price on library page</div>
+      <div class="rarity-desc">Saves with meaningful edits — high-tier gear, unlocked areas, boosted stats.</div>
+      <div class="rarity-example">e.g. 80% completion, all weapons</div>
+    </div>
+    <div class="rarity-card rc-epic">
+      <div class="rarity-label"><span class="rarity-dot"></span>Epic</div>
+      <div class="rarity-price">🔒 CR</div>
+      <div class="rarity-unit">See price on library page</div>
+      <div class="rarity-desc">High-effort edits — maxed stats, multi-character boosts, hidden unlocks.</div>
+      <div class="rarity-example">e.g. Max level, full inventory</div>
+    </div>
+    <div class="rarity-card rc-legendary">
+      <div class="rarity-label"><span class="rarity-dot"></span>Legendary</div>
+      <div class="rarity-price">🔒 CR</div>
+      <div class="rarity-unit">See price on library page</div>
+      <div class="rarity-desc">100% completion, complex save formats fully unlocked, or platform-exclusive edits — ∞ money, ∞ stats, ∞ resources.</div>
+      <div class="rarity-example">e.g. 100% completion, all secrets</div>
+    </div>
+  </div>
+  <div style="margin-top:12px;">
+    <div class="notice-box">
+      <span class="notice-icon">📌</span>
+      <span>Each save shows its exact CR cost on the library page. Prices are permanent — once set, they never change. PC saves sourced as community contributions are always free.</span>
+    </div>
+  </div>
+</section>
+
+<!-- LEVEL SYSTEM -->
+<section class="section">
+  <div class="section-title">Level System</div>
+
+  <div class="formula-box">
+    <span class="hi">Score</span> = a combination of your <span class="blue">daily streak</span> + <span class="green">total CR you've ever collected</span><br>
+    Level is calculated automatically — no separate XP grind, just show up every day.
+  </div>
+
+  <div class="level-grid">
+    <div class="level-card lv-1">
+      <div class="level-icon">🌱</div>
+      <div class="level-name">Newcomer</div>
+      <div class="level-num">LEVEL 1</div>
+      <div class="level-req">Just starting out. Roll your first daily CR to get going.</div>
+      <div class="level-score">Early stage</div>
+    </div>
+    <div class="level-card lv-2">
+      <div class="level-icon">🔍</div>
+      <div class="level-name">Explorer</div>
+      <div class="level-num">LEVEL 2</div>
+      <div class="level-req">A few days of streak or a decent amount of CR collected.</div>
+      <div class="level-score">Regular activity</div>
+    </div>
+    <div class="level-card lv-3">
+      <div class="level-icon">📦</div>
+      <div class="level-name">Collector</div>
+      <div class="level-num">LEVEL 3</div>
+      <div class="level-req">Consistent streak or a solid CR collection built up over time.</div>
+      <div class="level-score">Consistent</div>
+    </div>
+    <div class="level-card lv-4">
+      <div class="level-icon">🗂️</div>
+      <div class="level-name">Archivist</div>
+      <div class="level-num">LEVEL 4</div>
+      <div class="level-req">Long streak or a large amount of lifetime CR earned.</div>
+      <div class="level-score">Veteran</div>
+    </div>
+    <div class="level-card lv-5">
+      <div class="level-icon">👑</div>
+      <div class="level-name">Vault Master</div>
+      <div class="level-num">LEVEL 5</div>
+      <div class="level-req">Very long streak or a massive lifetime CR total.</div>
+      <div class="level-score">Top tier</div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- TOPUP -->
+<section class="section">
+  <div class="section-title">Top Up CR</div>
+  <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px;line-height:1.7;">
+    Want to skip the grind? Support RothedDB on Trakteer — CR is credited automatically once the format is correct. If anything goes wrong, it's resolved within 24 hours.
+    Top-up CR is permanent and never expires, unlike free daily CR.
+  </p>
+  <div class="topup-grid">
+    <div class="topup-card featured">
+      <div class="topup-platform">🍜</div>
+      <div class="topup-name">Trakteer</div>
+      <div class="topup-sub">Support via Gopay, OVO, QRIS, or bank transfer.</div>
+      <a href="https://trakteer.id/roth_db" target="_blank" rel="noopener" class="topup-btn primary">
+        Top Up via Trakteer →
+      </a>
+    </div>
+  </div>
+  <div style="margin-top:14px;">
+    <div class="notice-box">
+      <span class="notice-icon">💬</span>
+      <span>CR is credited automatically as long as the format is correct. If it doesn't arrive, reach out to <a href="https://rothed-db.com/support" target="_blank" rel="noopener" style="color:var(--gold);">Support</a> on Site — issues are resolved within 24 hours. No account = no CR.</span>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- FAQ -->
+<section class="section">
+  <div class="section-title">FAQ</div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      I downloaded a save but didn't get any CR. What happened?
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="faq-a">
+      You need to be logged in to earn CR. Guests can download free saves, but the daily roll only triggers for logged-in accounts. Also, you only get one roll per day — if you already claimed today's CR, the counter won't run again until the daily reset.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      My CR says "insufficient" on a save I should be able to afford. Why?
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="faq-a">
+      Make sure your balance matches the save's price. Check your CR balance in the top-right wallet widget after logging in. If you're sure the balance is enough, try refreshing the page — balances are cached locally and may be a few seconds behind.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      Does spending CR reduce my level score?
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="faq-a">
+      No. Level score is based on your streak days and <strong>lifetime CR earned</strong> — not your current balance. Spending CR on premium saves won't drop your level. Grind your streak and you'll stay ranked up.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      How long does top-up CR take to arrive?
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="faq-a">
+      CR is credited automatically as long as the support format is correct. If it doesn't show up, reach out to <a href="https://rothed-db.com/support" target="_blank" rel="noopener" style="color:var(--gold);">Support</a> on Site — it'll be resolved within 24 hours. Top-up CR is permanent and never expires.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      What's the FOMO Meter?
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="faq-a">
+      The FOMO Meter shows up in your dashboard once you're logged in. It tracks how many of your free CR are at risk of expiring, how many days left before they do, and nudges you to log in before they disappear. Top-up CR is always safe and won't appear here.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      Can I share my account with someone else?
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="faq-a">
+      One account per person is the intent. Sharing accounts to farm CR from multiple devices may result in the account being suspended. Each email gets one daily roll.
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-bottom">
+  <div class="cta-title">START<br><span>FOR FREE</span></div>
+  <p class="cta-sub">
+    Create an account, download your first save, and roll your first CR.<br>
+    No credit card. No subscription. Just the vault.
+  </p>
+  <div class="cta-btns">
+    <a href="index.html" class="cta-btn-primary">Browse Library →</a>
+    <a href="https://trakteer.id/roth_db" target="_blank" rel="noopener" class="cta-btn-secondary">☕ Support on Trakteer</a>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html">RothedDB</a>
+  <a href="request.html">Request a Save</a>
+  <a href="tos.html">Terms of Service</a>
+  <a href="https://trakteer.id/roth_db" target="_blank" rel="noopener">Top Up</a>
+  <span style="font-family:var(--font-mono);font-size:11px;color:var(--border-hi);">© 2025 RothedDB</span>
+</footer>
+
+<script>
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  }
+</script>
+</body>
+</html>

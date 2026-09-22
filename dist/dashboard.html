@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>My Dashboard — RothedDB</title>
+<meta name="theme-color" content="#03050d"/>
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzBhMGYxZSIvPjx0ZXh0IHg9IjE2IiB5PSIyMyIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjIiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmN2M5NDgiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlI8L3RleHQ+PC9zdmc+"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+<style>
+/* ═══════════════════════════════════════════════
+   DESIGN TOKENS — sama persis dengan template.html
+   biar dashboard ini nyambung visualnya sama situs utama
+═══════════════════════════════════════════════ */
+:root{
+  --bg:#03050d; --bg2:#060a14; --bg3:#090e1a;
+  --card:#0b1020; --card-hi:#0f1628;
+  --border:#131d30; --border-hi:#1d2e50;
+  --gold:#f7c948; --gold-dim:#c49820;
+  --gold-glow:rgba(247,201,72,.18); --gold-faint:rgba(247,201,72,.06); --gold-line:rgba(247,201,72,.22);
+  --blue:#3d8eff; --blue-dim:rgba(61,142,255,.12);
+  --green:#17d974; --green-dim:rgba(23,217,116,.12);
+  --red:#f04848; --red-dim:rgba(240,72,72,.12);
+  --amber:#f0a020;
+  --text:#d4e0f4; --text-dim:#a0bfdf; --text-muted:#7a96bc;
+  --radius:12px;
+  --font-brand:'Bebas Neue',sans-serif;
+  --font-head:'Outfit',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --transition:all .18s ease;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:radial-gradient(1200px 600px at 50% -10%, #0b1330 0%, var(--bg) 55%) fixed, var(--bg);
+  color:var(--text); font-family:var(--font-body); min-height:100vh;
+  -webkit-font-smoothing:antialiased; padding-bottom:60px;
+}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;}
+::selection{background:var(--gold-glow);}
+
+/* ── Topbar ─────────────────────────────────────────────────── */
+.topbar{
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; padding:14px 20px;
+  background:rgba(3,5,13,.82); backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+.topbar-brand{display:flex;align-items:center;gap:9px;}
+.topbar-brand .logo-box{
+  width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#f7c948,#c49820);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-brand);
+  font-size:19px;color:#0a0800;flex-shrink:0;
+}
+.topbar-brand span{font-family:var(--font-head);font-weight:800;font-size:15px;letter-spacing:.2px;}
+.topbar-brand small{display:block;font-family:var(--font-mono);font-size:9px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:1px;}
+.topbar-actions{display:flex;align-items:center;gap:8px;}
+.tb-btn{
+  display:flex; align-items:center; gap:6px; padding:8px 13px; border-radius:9px;
+  background:var(--card); border:1px solid var(--border); color:var(--text-dim);
+  font-size:12.5px; font-weight:600; cursor:pointer; transition:var(--transition); white-space:nowrap;
+}
+.tb-btn:hover{border-color:var(--border-hi);color:var(--text);}
+.tb-btn.active{background:var(--gold-faint);border-color:var(--gold-line);color:var(--gold);}
+.tb-btn.danger:hover{border-color:rgba(240,72,72,.4);color:var(--red);}
+
+/* ── Shell / wrapper ────────────────────────────────────────── */
+.shell{max-width:1180px;margin:0 auto;padding:22px 20px 0;}
+
+/* ── Profile header (pinned, not draggable) ────────────────── */
+.profile-head{
+  background:linear-gradient(160deg, var(--card-hi) 0%, var(--card) 100%);
+  border:1px solid var(--border); border-radius:16px; padding:22px;
+  display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+  box-shadow:0 8px 32px rgba(0,0,0,.5), 0 0 0 1px rgba(247,201,72,.05);
+  margin-bottom:20px; position:relative; overflow:hidden;
+}
+.profile-head::before{
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(420px 180px at 90% 0%, rgba(247,201,72,.08), transparent 70%);
+}
+.p-avatar{
+  width:64px;height:64px;border-radius:16px;flex-shrink:0;
+  background:linear-gradient(135deg,#f7c948,#c49820);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-brand);font-size:28px;color:#0a0800;
+  box-shadow:0 0 0 3px var(--gold-faint), 0 6px 20px rgba(247,201,72,.2);
+}
+.p-info{flex:1;min-width:180px;position:relative;}
+.p-info h1{font-family:var(--font-head);font-size:19px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.p-info .p-email{font-family:var(--font-mono);font-size:12px;color:var(--text-muted);margin-top:3px;}
+.p-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+.level-badge{padding:3px 10px;border-radius:20px;font-size:10.5px;font-weight:700;font-family:var(--font-head);letter-spacing:.3px;}
+.level-1{background:rgba(148,163,184,.1);border:1px solid rgba(148,163,184,.25);color:#a0bfdf;}
+.level-2{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);color:#60a5fa;}
+.level-3{background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);color:#c084fc;}
+.level-4{background:rgba(247,201,72,.1);border:1px solid rgba(247,201,72,.35);color:var(--gold);}
+.level-5{background:linear-gradient(90deg,rgba(247,201,72,.18),rgba(247,201,72,.06));border:1px solid rgba(247,201,72,.5);color:var(--gold);box-shadow:0 0 10px rgba(247,201,72,.15);}
+.streak-badge{padding:3px 10px;border-radius:20px;font-size:10.5px;font-weight:700;font-family:var(--font-head);background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);color:#fca5a5;}
+.streak-badge.hot{border-color:rgba(239,68,68,.5);color:#ef4444;}
+.badge-adfree{padding:3px 10px;border-radius:20px;font-size:10.5px;font-weight:700;font-family:var(--font-head);background:var(--green-dim);border:1px solid rgba(23,217,116,.3);color:var(--green);}
+.p-quickstats{display:flex;gap:22px;flex-wrap:wrap;}
+.p-qs{text-align:right;}
+.p-qs .n{font-family:var(--font-mono);font-size:19px;font-weight:700;color:var(--gold);}
+.p-qs .l{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+
+/* ── Customize bar ─────────────────────────────────────────── */
+.customize-bar{
+  display:none; align-items:center; justify-content:space-between; gap:10px;
+  background:var(--gold-faint); border:1px dashed var(--gold-line); border-radius:12px;
+  padding:11px 16px; margin-bottom:16px; font-size:12.5px; color:var(--gold);
+}
+.customize-bar.show{display:flex;}
+.customize-bar b{font-family:var(--font-head);}
+.customize-bar .cb-actions{display:flex;gap:8px;}
+.cb-reset{background:none;border:1px solid var(--gold-line);color:var(--gold);padding:5px 11px;border-radius:7px;font-size:11.5px;cursor:pointer;font-weight:600;}
+.cb-reset:hover{background:var(--gold-glow);}
+
+/* ── Widget grid ────────────────────────────────────────────── */
+.dash-grid{
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-bottom:8px;
+}
+.widget{
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+  padding:18px; display:flex; flex-direction:column; gap:12px;
+  transition:box-shadow .18s ease, border-color .18s ease, opacity .15s ease, transform .15s ease;
+  min-width:0;
+}
+.widget.span2{grid-column:span 2;}
+.widget[data-hidden="1"]{display:none;}
+.widget.dragging{opacity:.45; border-color:var(--gold-line); box-shadow:0 0 0 1px var(--gold-line);}
+.widget.drop-flash{animation:dropFlash .4s ease;}
+@keyframes dropFlash{0%{box-shadow:0 0 0 2px var(--gold-line);}100%{box-shadow:none;}}
+
+.widget-head{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.widget-title{display:flex;align-items:center;gap:9px;font-family:var(--font-head);font-weight:700;font-size:14px;}
+.widget-title .wi{font-size:16px;}
+.widget-headtools{display:flex;align-items:center;gap:4px;}
+.wh-btn{
+  width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+  background:transparent;border:1px solid transparent;color:var(--text-muted);cursor:pointer;font-size:13px;
+  transition:var(--transition);
+}
+.wh-btn:hover{background:var(--card-hi);color:var(--text);}
+.drag-handle{
+  cursor:grab; touch-action:none; display:none;
+  border:1px solid var(--border); color:var(--text-dim);
+}
+.customize-on .drag-handle{display:flex;}
+.customize-on .widget{border-style:dashed;}
+.drag-handle:active{cursor:grabbing;}
+
+.w-sub{font-size:11.5px;color:var(--text-muted);margin-top:-6px;}
+
+/* ── shared bits ────────────────────────────────────────────── */
+.big-num{font-family:var(--font-mono);font-weight:700;font-size:30px;color:var(--gold);line-height:1;}
+.big-num small{font-size:13px;color:var(--text-muted);font-weight:500;margin-left:4px;}
+.row-between{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.pill{padding:3px 9px;border-radius:20px;font-size:10.5px;font-weight:600;border:1px solid var(--border);color:var(--text-dim);}
+.pill.gold{background:var(--gold-faint);border-color:var(--gold-line);color:var(--gold);}
+.pill.green{background:var(--green-dim);border-color:rgba(23,217,116,.3);color:var(--green);}
+.pill.red{background:var(--red-dim);border-color:rgba(240,72,72,.3);color:var(--red);}
+.pill.blue{background:var(--blue-dim);border-color:rgba(61,142,255,.3);color:var(--blue);}
+
+.btn{
+  padding:10px 15px;border-radius:9px;border:none;cursor:pointer;font-weight:700;font-size:12.5px;
+  font-family:var(--font-head);transition:var(--transition); text-align:center;
+}
+.btn-gold{background:linear-gradient(135deg,#f7c948,#d4920a);color:#0a0800;box-shadow:0 4px 16px rgba(247,201,72,.22);}
+.btn-gold:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 22px rgba(247,201,72,.32);}
+.btn-gold:disabled{opacity:.5;cursor:default;transform:none;box-shadow:none;}
+.btn-ghost{background:var(--card-hi);border:1px solid var(--border);color:var(--text-dim);}
+.btn-ghost:hover{border-color:var(--border-hi);color:var(--text);}
+.btn-block{width:100%;}
+.btn-sm{padding:7px 12px;font-size:11.5px;}
+
+.mini-list{display:flex;flex-direction:column;gap:8px;max-height:190px;overflow-y:auto;}
+.mini-list::-webkit-scrollbar{width:5px;}
+.mini-list::-webkit-scrollbar-thumb{background:var(--border-hi);border-radius:6px;}
+.mini-row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:9px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;font-size:12px;
+}
+.mini-row .mr-name{color:var(--text);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.mini-row .mr-sub{color:var(--text-muted);font-size:10.5px;font-family:var(--font-mono);margin-top:2px;}
+.mini-row .mr-val{font-family:var(--font-mono);font-weight:700;flex-shrink:0;}
+.mini-row .mr-val.pos{color:var(--green);}
+.mini-row .mr-val.neg{color:var(--red);}
+
+.empty-hint{
+  text-align:center;padding:20px 10px;color:var(--text-muted);font-size:12px;
+  border:1px dashed var(--border);border-radius:10px;
+}
+.skeleton{background:linear-gradient(90deg,var(--bg2) 25%,var(--card-hi) 50%,var(--bg2) 75%);background-size:200% 100%;animation:sk 1.3s infinite;border-radius:8px;}
+@keyframes sk{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+.badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:10px;}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 4px;border-radius:10px;background:var(--bg2);border:1px solid var(--border);}
+.badge-item .bi-icon{font-size:20px;}
+.badge-item .bi-name{font-size:9px;color:var(--text-muted);text-align:center;letter-spacing:.2px;}
+.badge-item.locked{opacity:.35;filter:grayscale(1);}
+
+.rank-tabs{display:flex;gap:6px;background:var(--bg2);border-radius:9px;padding:3px;border:1px solid var(--border);}
+.rank-tab{flex:1;padding:6px 8px;border-radius:7px;text-align:center;font-size:11px;font-weight:700;color:var(--text-muted);cursor:pointer;transition:var(--transition);}
+.rank-tab.active{background:var(--gold);color:#0a0800;}
+
+.demo-tag{font-size:9px;font-family:var(--font-mono);color:var(--amber);background:rgba(240,160,32,.1);border:1px solid rgba(240,160,32,.25);padding:2px 6px;border-radius:6px;letter-spacing:.4px;}
+
+.toast-wrap{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;align-items:center;}
+.toast{
+  background:var(--bg3);border:1px solid var(--gold-line);border-radius:10px;padding:11px 18px;
+  font-size:12.5px;color:var(--text);box-shadow:0 8px 28px rgba(0,0,0,.6);animation:toastIn .25s ease;white-space:nowrap;
+}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── Login gate ─────────────────────────────────────────────── */
+.login-gate{
+  position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:rgba(3,5,13,.86);backdrop-filter:blur(6px);
+}
+.login-card{
+  width:100%;max-width:380px;background:var(--card-hi);border:1px solid var(--border-hi);border-radius:16px;
+  padding:28px 24px;box-shadow:0 24px 64px rgba(0,0,0,.7), 0 0 0 1px rgba(247,201,72,.06);
+}
+.login-card .lg-logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#f7c948,#c49820);display:flex;align-items:center;justify-content:center;font-family:var(--font-brand);font-size:24px;color:#0a0800;margin:0 auto 14px;}
+.login-card h2{font-family:var(--font-head);font-size:18px;text-align:center;font-weight:800;}
+.login-card p{font-size:12.5px;color:var(--text-muted);text-align:center;margin-top:6px;line-height:1.5;}
+.lg-input{
+  width:100%;margin-top:16px;padding:12px 13px;border-radius:9px;background:var(--bg2);
+  border:1px solid var(--border);color:var(--text);font-size:13.5px;font-family:var(--font-body);
+  letter-spacing:.3px;
+}
+.lg-input:focus{outline:none;border-color:var(--gold-line);box-shadow:0 0 0 3px var(--gold-faint);}
+.lg-msg{font-size:11.5px;margin-top:8px;min-height:14px;text-align:center;}
+.lg-msg.err{color:var(--red);}
+.lg-msg.ok{color:var(--green);}
+.lg-step{margin-top:4px;}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width:860px){
+  .dash-grid{grid-template-columns:1fr;}
+  .widget.span2{grid-column:span 1;}
+  .profile-head{padding:18px;}
+  .p-quickstats{width:100%;justify-content:space-between;gap:10px;margin-top:6px;}
+  .topbar-brand small{display:none;}
+}
+@media (max-width:480px){
+  .shell{padding:16px 12px 0;}
+  .topbar{padding:12px 14px;}
+  .tb-btn span.tb-label{display:none;}
+  .p-info h1{font-size:16.5px;}
+  .p-avatar{width:52px;height:52px;font-size:22px;border-radius:13px;}
+  .big-num{font-size:25px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ TOPBAR ═══════════════ -->
+<div class="topbar">
+  <a class="topbar-brand" href="./">
+    <div class="logo-box">R</div>
+    <div><span>RothedDB</span><small>Member Dashboard</small></div>
+  </a>
+  <div class="topbar-actions">
+    <button class="tb-btn" id="customize-toggle" onclick="toggleCustomize()">✏️ <span class="tb-label">Edit layout</span></button>
+    <button class="tb-btn danger" onclick="doLogout()">↩ <span class="tb-label">Log out</span></button>
+  </div>
+</div>
+
+<!-- ═══════════════ LOGIN GATE ═══════════════ -->
+<div class="login-gate" id="login-gate">
+  <div class="login-card">
+    <div class="lg-logo">R</div>
+    <h2>Sign in to your Dashboard</h2>
+    <p>Use the same email as your RothedDB premium account. We'll send a one-time code.</p>
+
+    <div id="lg-step-email" class="lg-step">
+      <input type="email" id="lg-email" class="lg-input" placeholder="you@email.com" autocomplete="email"/>
+      <button class="btn btn-gold btn-block" style="margin-top:12px" id="lg-send-btn" onclick="lgSendOtp()">Send code</button>
+      <div class="lg-msg" id="lg-email-msg"></div>
+    </div>
+
+    <div id="lg-step-otp" class="lg-step" style="display:none">
+      <p style="margin-top:0">Code sent to <b id="lg-otp-email-label" style="color:var(--gold)"></b></p>
+      <input type="text" id="lg-otp" class="lg-input" placeholder="6-digit code" maxlength="6" inputmode="numeric" style="text-align:center;letter-spacing:6px;font-family:var(--font-mono);font-size:18px;"/>
+      <button class="btn btn-gold btn-block" style="margin-top:12px" id="lg-verify-btn" onclick="lgVerifyOtp()">Verify &amp; enter</button>
+      <div class="lg-msg" id="lg-otp-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SHELL ═══════════════ -->
+<div class="shell" id="dash-shell" style="display:none">
+
+  <!-- Profile header (pinned) -->
+  <div class="profile-head">
+    <div class="p-avatar" id="p-avatar">?</div>
+    <div class="p-info">
+      <h1 id="p-name">—</h1>
+      <div class="p-email" id="p-email">—</div>
+      <div class="p-badges" id="p-badges"></div>
+    </div>
+    <div class="p-quickstats">
+      <div class="p-qs"><div class="n" id="qs-balance">—</div><div class="l">Balance</div></div>
+      <div class="p-qs"><div class="n" id="qs-lifetime">—</div><div class="l">Lifetime CR</div></div>
+      <div class="p-qs"><div class="n" id="qs-rank">—</div><div class="l">Rank</div></div>
+    </div>
+  </div>
+
+  <div class="customize-bar" id="customize-bar">
+    <span><b>Edit layout —</b> drag the ⠿ handle to reorder, or use 👁 to hide a widget.</span>
+    <div class="cb-actions"><button class="cb-reset" onclick="resetLayout()">Reset to default</button></div>
+  </div>
+
+  <!-- Widget grid -->
+  <div class="dash-grid" id="dash-grid">
+
+    <!-- 1. CR Balance -->
+    <div class="widget" data-wid="balance">
+      <div class="widget-head">
+        <div class="widget-title"><span class="wi">💰</span> CR Balance</div>
+        <div class="widget-headtools">
+          <div class="wh-btn drag-handle">⠿</div>
+          <div class="wh-btn" onclick="hideWidget('balance')" title="Hide">👁</div>
+        </div>
+      </div>
+      <div class="big-num" id="w-balance-num">— <small>CR</small></div>
+      <div class="w-sub" id="w-balance-sub">Loading your balance…</div>
+      <div class="row-between">
+        <a class="btn btn-gold" style="flex:1" href="https://trakteer.id/roth_db" target="_blank" id="w-topup-btn">🍜 Top up CR</a>
+        <button class="btn btn-ghost btn-sm" onclick="refreshBalance()">↻</button>
+      </div>
+    </div>
+
+    <!-- 2. Daily Claim -->
+    <div class="widget" data-wid="claim">
+      <div class="widget-head">
+        <div class="widget-title"><span class="wi">🎁</span> Daily Claim</div>
+        <div class="widget-headtools">
+          <div class="wh-btn drag-handle">⠿</div>
+          <div class="wh-btn" onclick="hideWidget('claim')" title="Hide">👁</div>
+        </div>
+      </div>
+      <div class="row-between">
+        <div>
+          <div class="big-num" id="w-streak-num" style="font-size:26px">🔥 —</div>
+          <div class="w-sub">day streak</div>
+        </div>
+        <span class="pill gold" id="w-claim-pill">checking…</span>
+      </div>
+      <button class="btn btn-gold btn-block" id="w-claim-btn" onclick="doDailyClaim()" disabled>Claim today's CR</button>
+    </div>
+
+    <!-- 3. Leaderboard rank -->
+    <div class="widget" data-wid="leaderboard">
+      <div class="widget-head">
+        <div class="widget-title"><span class="wi">🏆</span> Leaderboard</div>
+        <div class="widget-headtools">
+          <div class="wh-btn drag-handle">⠿</div>
+          <div class="wh-btn" onclick="hideWidget('leaderboard')" title="Hide">👁</div>
+        </div>
+      </div>
+      <div class="rank-tabs">
+        <div class="rank-tab active" data-tab="daily" onclick="switchRankTab('daily')">Daily Claim</div>
+        <div class="rank-tab" data-tab="spender" onclick="switchRankTab('spender')">Top Spender</div>
+      </div>
+      <div id="w-rank-body" class="mini-list"><div class="empty-hint">Loading rank…</div></div>
+      <div class="row-between">
+        <button class="btn btn-ghost btn-sm" style="flex:1" onclick="toggleLbVisibility()" id="w-lb-vis-btn">🙈 Hide me from leaderboard</button>
+      </div>
+    </div>
+
+    <!-- 4. Level & Badges -->
+    <div class="widget" data-wid="badges">
+      <div class="widget-head">
+        <div class="widget-title"><span class="wi">🎖️</span> Achievements</div>
+        <div class="widget-headtools">
+          <div class="wh-btn drag-handle">⠿</div>
+          <div class="wh-btn" onclick="hideWidget('badges')" title="Hide">👁</div>
+        </div>
+      </div>
+      <div class="badge-grid" id="w-badge-grid"></div>
+    </div>
+
+    <!-- 5. Premium Vault -->
+    <div class="widget span2" data-wid="vault">
+      <div class="widget-head">
+        <div class="widget-title"><span class="wi">🔓</span> My Premium Vault</div>
+        <div class="widget-headtools">
+          <div class="wh-btn drag-handle">⠿</div>
+          <div class="wh-btn" onclick="hideWidget('vault')" title="Hide">👁</div>
+        </div>
+      </div>
+      <div class="w-sub">Saves you've unlocked — open My Savedata to download.</div>
+      <div id="w-vault-body" class="mini-list" style="max-height:210px"><div class="empty-hint">Loading your vault…</div></div>
+    </div>
+
+    <!-- 6. Credit History -->
+    <div class="widget" data-wid="history">
+      <div class="widget-head">
+        <div class="widget-title"><span class="wi">🧾</span> Credit History</div>
+        <div class="widget-headtools">
+          <div class="wh-btn drag-handle">⠿</div>
+          <div class="wh-btn" onclick="hideWidget('history')" title="Hide">👁</div>
+        </div>
+      </div>
+      <div id="w-hist-body" class="mini-list"><div class="empty-hint">Loading history…</div></div>
+    </div>
+
+    <!-- 7. Ad-Free status -->
+    <div class="widget" data-wid="adfree">
+      <div class="widget-head">
+        <div class="widget-title"><span class="wi">🚫📺</span> Ad-Free Status</div>
+        <div class="widget-headtools">
+          <div class="wh-btn drag-handle">⠿</div>
+          <div class="wh-btn" onclick="hideWidget('adfree')" title="Hide">👁</div>
+        </div>
+      </div>
+      <div id="w-adfree-body">
+        <span class="pill" id="w-adfree-pill">checking…</span>
+        <div class="w-sub" id="w-adfree-sub" style="margin-top:8px">Ad-free is active for 30 days after any CR top up.</div>
+      </div>
+      <a class="btn btn-ghost btn-block" href="https://trakteer.id/roth_db" target="_blank">Extend ad-free</a>
+    </div>
+
+    <!-- 8. YouTube Membership -->
+    <div class="widget" data-wid="ytmembership">
+      <div class="widget-head">
+        <div class="widget-title"><span class="wi">▶️</span> YouTube Membership</div>
+        <div class="widget-headtools">
+          <div class="wh-btn drag-handle">⠿</div>
+          <div class="wh-btn" onclick="hideWidget('ytmembership')" title="Hide">👁</div>
+        </div>
+      </div>
+      <div id="w-yt-body">
+        <span class="pill" id="w-yt-pill">checking…</span>
+        <div class="w-sub" id="w-yt-sub" style="margin-top:8px">Link your channel membership to get bonus CR every month.</div>
+      </div>
+      <a class="btn btn-gold btn-block" href="https://www.youtube.com/@Rotheds/join" target="_blank">▶ Submit membership</a>
+    </div>
+
+    <!-- 9. Support -->
+    <div class="widget" data-wid="support">
+      <div class="widget-head">
+        <div class="widget-title"><span class="wi">💬</span> Support</div>
+        <div class="widget-headtools">
+          <div class="wh-btn drag-handle">⠿</div>
+          <div class="wh-btn" onclick="hideWidget('support')" title="Hide">👁</div>
+        </div>
+      </div>
+      <div class="w-sub">Need help with a save, a resign, or a topup that didn't land? We reply fast.</div>
+      <div class="row-between">
+        <button class="btn btn-gold btn-block" onclick="openLiveChat()">💬 Live chat</button>
+      </div>
+      <div id="w-tickets-body"></div>
+    </div>
+
+  </div>
+
+  <div style="text-align:center;padding:26px 0 10px;font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">
+    RothedDB Dashboard · layout &amp; widget visibility are saved to this browser
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   SESSION — struktur & key SAMA PERSIS dengan template.html biar
+   dashboard ini otomatis "melihat" sesi yang sama dgn situs utama.
+══════════════════════════════════════════════════════════════ */
+const GAS_URL   = "https://script.google.com/macros/s/AKfycbxPxl4tEsqX7r5bQmtolk9K9AhSHYypG0lPv3k-TXii4FCQ49vsym_6kK6MPzyK6QpI/exec"; // ← replace kalau beda
+const SESS_KEY  = "rdb_vault_sess";
+const SESS_TTL  = 30 * 24 * 60 * 60 * 1000;
+
+function loadSession(){
+  try{
+    const raw = JSON.parse(localStorage.getItem(SESS_KEY) || "null");
+    if(!raw) return null;
+    if(raw.expiry && Date.now() > raw.expiry){ localStorage.removeItem(SESS_KEY); return null; }
+    return raw;
+  }catch(e){ return null; }
+}
+function saveSession(email, sessionToken, balance, lifetimeCr, lastTopupAt){
+  localStorage.setItem(SESS_KEY, JSON.stringify({
+    email, sessionToken, balance:Number(balance), lifetimeCr:Number(lifetimeCr||0),
+    lastTopupAt: lastTopupAt || null, expiry: Date.now() + SESS_TTL
+  }));
+}
+function clearSession(){ localStorage.removeItem(SESS_KEY); }
+
+let sess = null;
+
+function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function toast(msg){
+  const wrap = document.getElementById("toast-wrap");
+  const el = document.createElement("div");
+  el.className = "toast"; el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(()=>{ el.style.opacity="0"; el.style.transition="opacity .25s"; setTimeout(()=>el.remove(), 260); }, 2600);
+}
+
+/* ── Login flow — pakai action sendotp / verifyotp yang sudah ada di GAS ── */
+async function lgSendOtp(){
+  const email = document.getElementById("lg-email").value.trim().toLowerCase();
+  const msg = document.getElementById("lg-email-msg");
+  const btn = document.getElementById("lg-send-btn");
+  if(!email || !email.includes("@")){ msg.textContent="Enter a valid email."; msg.className="lg-msg err"; return; }
+  btn.disabled = true; btn.textContent = "Sending…";
+  msg.textContent=""; msg.className="lg-msg";
+  try{
+    const res = await fetch(`${GAS_URL}?action=sendotp&email=${encodeURIComponent(email)}`, {cache:"no-store"});
+    const data = await res.json();
+    if(data.status === "sent"){
+      document.getElementById("lg-otp-email-label").textContent = email;
+      document.getElementById("lg-step-email").style.display = "none";
+      document.getElementById("lg-step-otp").style.display = "block";
+      document.getElementById("lg-otp").focus();
+    } else if(data.status === "no_account"){
+      msg.textContent = "No premium account found for this email."; msg.className="lg-msg err";
+    } else if(data.status === "rate_limited"){
+      msg.textContent = "Too many requests. Try again in 1 hour."; msg.className="lg-msg err";
+    } else {
+      msg.textContent = "Failed to send code. Try again."; msg.className="lg-msg err";
+    }
+  }catch(e){
+    msg.textContent = "Network error. Try again."; msg.className="lg-msg err";
+  }
+  btn.disabled = false; btn.textContent = "Send code";
+}
+async function lgVerifyOtp(){
+  const email = document.getElementById("lg-otp-email-label").textContent.trim();
+  const otp = document.getElementById("lg-otp").value.trim();
+  const msg = document.getElementById("lg-otp-msg");
+  const btn = document.getElementById("lg-verify-btn");
+  if(!otp || otp.length !== 6){ msg.textContent="Enter the 6-digit code."; msg.className="lg-msg err"; return; }
+  btn.disabled = true; btn.textContent = "Verifying…";
+  try{
+    const res = await fetch(`${GAS_URL}?action=verifyotp&email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`, {cache:"no-store"});
+    const data = await res.json();
+    if(data.status === "success"){
+      saveSession(data.email, data.sessionToken, data.balance, data.lifetimeCr||0, data.lastTopupAt||null);
+      sess = loadSession();
+      enterDashboard();
+    } else if(data.status === "invalid_otp"){
+      msg.textContent = "Wrong code, try again."; msg.className="lg-msg err";
+    } else {
+      msg.textContent = "Verification failed. Try again."; msg.className="lg-msg err";
+    }
+  }catch(e){
+    msg.textContent = "Network error. Try again."; msg.className="lg-msg err";
+  }
+  btn.disabled = false; btn.textContent = "Verify & enter";
+}
+function doLogout(){
+  clearSession();
+  location.reload();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WIDGET DATA — tiap fetch* dicoba ke backend beneran dulu; kalau
+   action-nya belum ada di GAS (network/parse gagal), jatuh ke demo
+   data yang ditandai jelas dgn label "(preview)" — supaya dashboard
+   tetap enak dipakai/didemoin sebelum semua endpoint kelar dibikin.
+══════════════════════════════════════════════════════════════ */
+async function gasGet(action, params={}){
+  const qs = new URLSearchParams({action, email:sess.email, sessionToken:sess.sessionToken, ...params});
+  const res = await fetch(`${GAS_URL}?${qs.toString()}`, {cache:"no-store"});
+  const data = await res.json();
+  if(data.status && data.status !== "ok") throw new Error(data.status);
+  return data;
+}
+
+function renderProfileHeader(){
+  const initials = sess.email.slice(0,2).toUpperCase();
+  document.getElementById("p-avatar").textContent = initials;
+  document.getElementById("p-name").innerHTML = esc(sess.email.split("@")[0]);
+  document.getElementById("p-email").textContent = sess.email;
+  document.getElementById("qs-balance").textContent = Number(sess.balance).toLocaleString();
+  document.getElementById("qs-lifetime").textContent = Number(sess.lifetimeCr||0).toLocaleString();
+  document.getElementById("qs-rank").textContent = "—";
+}
+
+function levelFromLifetime(cr){
+  if(cr >= 20000) return 5; if(cr >= 8000) return 4; if(cr >= 3000) return 3; if(cr >= 1000) return 2; return 1;
+}
+function renderBadgesRow(){
+  const lvl = levelFromLifetime(sess.lifetimeCr||0);
+  const badges = document.getElementById("p-badges");
+  const adFree = sess.lastTopupAt && (Date.now() - Number(sess.lastTopupAt)) <= 30*24*60*60*1000;
+  badges.innerHTML = `
+    <span class="level-badge level-${lvl}">Level ${lvl}</span>
+    <span class="streak-badge" id="p-streak-badge" style="display:none">🔥 —</span>
+    ${adFree ? `<span class="badge-adfree">🚫📺 Ad-Free</span>` : ``}
+  `;
+}
+
+async function refreshBalance(){
+  try{
+    const data = await gasGet("getcredithistory");
+    sess.balance = data.balance; sess.lifetimeCr = data.lifetimeCr ?? sess.lifetimeCr; sess.lastTopupAt = data.lastTopupAt ?? sess.lastTopupAt;
+    saveSession(sess.email, sess.sessionToken, sess.balance, sess.lifetimeCr, sess.lastTopupAt);
+    document.getElementById("w-balance-num").innerHTML = `${Number(sess.balance).toLocaleString()} <small>CR</small>`;
+    document.getElementById("w-balance-sub").textContent = `Lifetime: ${Number(sess.lifetimeCr||0).toLocaleString()} CR earned`;
+    document.getElementById("qs-balance").textContent = Number(sess.balance).toLocaleString();
+    document.getElementById("qs-lifetime").textContent = Number(sess.lifetimeCr||0).toLocaleString();
+    renderHistory(data.history || []);
+    renderBadgesRow();
+    renderAdFree();
+  }catch(e){
+    document.getElementById("w-balance-num").innerHTML = `${Number(sess.balance).toLocaleString()} <small>CR</small>`;
+    document.getElementById("w-balance-sub").textContent = "Couldn't refresh — showing last known balance.";
+  }
+}
+
+function renderHistory(history){
+  const body = document.getElementById("w-hist-body");
+  if(!history.length){ body.innerHTML = `<div class="empty-hint">No transactions yet.</div>`; return; }
+  body.innerHTML = history.slice(0,8).map(h=>{
+    const amt = Number(h.amount ?? h.change ?? 0);
+    const pos = amt >= 0;
+    return `<div class="mini-row">
+      <div><div class="mr-name">${esc(h.reason || h.label || h.type || "Transaction")}</div><div class="mr-sub">${esc(h.date || h.time || "")}</div></div>
+      <div class="mr-val ${pos?"pos":"neg"}">${pos?"+":""}${amt.toLocaleString()}</div>
+    </div>`;
+  }).join("");
+}
+
+/* Daily claim — pakai flow initdailyclaim → claimdailycredits yg sudah ada */
+let claimToken = null;
+async function initClaimState(){
+  const today = new Date().toLocaleDateString("en-CA", {timeZone:"Asia/Jakarta"});
+  const claimedKey = "rdb_claimed_" + today;
+  document.getElementById("w-streak-num").textContent = "🔥 —";
+  if(localStorage.getItem(claimedKey)){
+    document.getElementById("w-claim-pill").textContent = "claimed"; document.getElementById("w-claim-pill").className="pill green";
+    document.getElementById("w-claim-btn").textContent = "Already claimed today"; document.getElementById("w-claim-btn").disabled = true;
+    return;
+  }
+  try{
+    const data = await gasGet("initdailyclaim");
+    if(data.status === "already_claimed"){
+      localStorage.setItem(claimedKey, "1");
+      document.getElementById("w-claim-pill").textContent="claimed"; document.getElementById("w-claim-pill").className="pill green";
+      document.getElementById("w-claim-btn").textContent = "Already claimed today"; document.getElementById("w-claim-btn").disabled = true;
+      return;
+    }
+    claimToken = data.claimToken;
+    if(data.streak) document.getElementById("w-streak-num").textContent = `🔥 ${data.streak}`;
+    document.getElementById("w-claim-pill").textContent="ready"; document.getElementById("w-claim-pill").className="pill gold";
+    document.getElementById("w-claim-btn").disabled = false;
+  }catch(e){
+    document.getElementById("w-claim-pill").textContent="unavailable"; document.getElementById("w-claim-pill").className="pill red";
+  }
+}
+async function doDailyClaim(){
+  if(!claimToken) return;
+  const btn = document.getElementById("w-claim-btn");
+  btn.disabled = true; btn.textContent = "Claiming…";
+  try{
+    const data = await gasGet("claimdailycredits", {claimToken});
+    if(data.status === "ok"){
+      const today = new Date().toLocaleDateString("en-CA", {timeZone:"Asia/Jakarta"});
+      localStorage.setItem("rdb_claimed_" + today, "1");
+      toast(`+${data.amount || ""} CR claimed! 🎉`);
+      document.getElementById("w-claim-pill").textContent="claimed"; document.getElementById("w-claim-pill").className="pill green";
+      btn.textContent = "Already claimed today";
+      refreshBalance();
+    } else {
+      toast("Claim failed — try again.");
+      btn.disabled=false; btn.textContent="Claim today's CR";
+    }
+  }catch(e){
+    toast("Claim failed — try again.");
+    btn.disabled=false; btn.textContent="Claim today's CR";
+  }
+}
+
+/* Leaderboard visibility — pakai getleaderboardvisibility / setleaderboardvisibility */
+let lbHidden = false;
+async function initLbVisibility(){
+  try{
+    const data = await gasGet("getleaderboardvisibility");
+    lbHidden = !!data.hidden;
+    document.getElementById("w-lb-vis-btn").textContent = lbHidden ? "👁️ Show me on leaderboard" : "🙈 Hide me from leaderboard";
+  }catch(e){ /* silent — endpoint mgkn beda nama, biarkan default */ }
+}
+async function toggleLbVisibility(){
+  try{
+    const next = !lbHidden;
+    const data = await gasGet("setleaderboardvisibility", {hidden: next ? "1":"0"});
+    lbHidden = next;
+    document.getElementById("w-lb-vis-btn").textContent = lbHidden ? "👁️ Show me on leaderboard" : "🙈 Hide me from leaderboard";
+    toast(lbHidden ? "You're hidden from the leaderboard" : "You're visible on the leaderboard");
+  }catch(e){ toast("Couldn't update — try again."); }
+}
+
+/* Leaderboard rank list — endpoint belum pasti ada di GAS, fallback ke preview */
+let rankTab = "daily";
+function switchRankTab(tab){
+  rankTab = tab;
+  document.querySelectorAll(".rank-tab").forEach(t=>t.classList.toggle("active", t.dataset.tab===tab));
+  loadRank();
+}
+async function loadRank(){
+  const body = document.getElementById("w-rank-body");
+  body.innerHTML = `<div class="empty-hint">Loading…</div>`;
+  try{
+    const data = await gasGet("getleaderboardrank", {type: rankTab});
+    document.getElementById("qs-rank").textContent = data.myRank ? `#${data.myRank}` : "—";
+    if(!data.top || !data.top.length){ body.innerHTML = `<div class="empty-hint">No data yet.</div>`; return; }
+    body.innerHTML = data.top.slice(0,5).map((r,i)=>`
+      <div class="mini-row"><div class="mr-name">#${i+1} ${esc(r.name || r.email || "Member")}</div>
+      <div class="mr-val pos">${Number(r.value||r.score||0).toLocaleString()}</div></div>`).join("");
+  }catch(e){
+    document.getElementById("qs-rank").textContent = "—";
+    body.innerHTML = `<div class="mini-row"><div class="mr-name">Weekly ranking <span class="demo-tag">preview</span></div><div class="mr-val">n/a</div></div>
+      <div class="empty-hint">Live ranking connects once the leaderboard endpoint is wired up.</div>`;
+  }
+}
+
+/* Badges/level grid — cosmetic, derived from lifetimeCr locally */
+function renderBadgeGrid(){
+  const lvl = levelFromLifetime(sess.lifetimeCr||0);
+  const defs = [
+    {icon:"🌱", name:"First Save", need:1},
+    {icon:"🔥", name:"7-Day Streak", need:2},
+    {icon:"💎", name:"1K Lifetime", need:2},
+    {icon:"👑", name:"Top Spender", need:4},
+    {icon:"🚀", name:"3K Lifetime", need:3},
+    {icon:"🏆", name:"Legend", need:5},
+  ];
+  document.getElementById("w-badge-grid").innerHTML = defs.map(d=>`
+    <div class="badge-item ${lvl>=d.need? "":"locked"}"><div class="bi-icon">${d.icon}</div><div class="bi-name">${d.name}</div></div>
+  `).join("");
+}
+
+/* Premium vault — PREVIEW ONLY. Menampilkan save yang sudah dimiliki
+   (owned === true) tapi SENGAJA tidak ada tombol/aksi untuk ambil link
+   download di sini. Kenapa: dashboard ini banyak widget & permukaan
+   interaksi, jadi makin kecil kemungkinan ada tombol yang lolos tanpa
+   pengecekan kepemilikan ulang di server tiap kali dipanggil. Alur
+   redownload yang sesungguhnya (dan sudah di-audit) cuma ada di satu
+   tempat: library.html ("My Savedata"). Di sana pun keamanan aslinya
+   tetap di server (getdownloadurl WAJIB cek ulang email+fileId ke sheet
+   pembelian) — filter owned di klien manapun (di sini atau di
+   library.html) cuma kosmetik, bukan security boundary. */
+async function loadVault(){
+  const body = document.getElementById("w-vault-body");
+  try{
+    const data  = await gasGet("getpremiumfiles");
+    const all   = data.files || data.items || [];
+    const items = all.filter(it => it.owned);
+    if(!items.length){ body.innerHTML = `<div class="empty-hint">You haven't unlocked any premium saves yet — browse the library to get started.</div>`; return; }
+    body.innerHTML = items.slice(0,10).map(it=>`
+      <div class="mini-row"><div><div class="mr-name">${esc(it.game || it.name || "Save file")}</div><div class="mr-sub">${esc(it.platform||"")}</div></div>
+      <span class="pill green" title="You own this — download it from My Savedata">✓ Owned</span></div>
+    `).join("") + `<a href="library.html" class="btn btn-ghost btn-sm" style="display:block;text-align:center;margin-top:10px;">Open My Savedata to download →</a>`;
+  }catch(e){
+    body.innerHTML = `<div class="empty-hint">Vault connects to your unlocked saves once <span class="demo-tag">getpremiumfiles</span> is reachable from this page.</div>`;
+  }
+}
+
+/* Ad-free status — derived locally from lastTopupAt (sama logika seperti situs utama) */
+function renderAdFree(){
+  const eligible = sess.lastTopupAt && (Date.now() - Number(sess.lastTopupAt)) <= 30*24*60*60*1000;
+  const pill = document.getElementById("w-adfree-pill");
+  const sub = document.getElementById("w-adfree-sub");
+  if(eligible){
+    const daysLeft = Math.max(0, 30 - Math.floor((Date.now()-Number(sess.lastTopupAt))/(24*60*60*1000)));
+    pill.textContent = "active"; pill.className="pill green";
+    sub.textContent = `Ads are off for you — ${daysLeft} day${daysLeft!==1?"s":""} left in this window.`;
+  } else {
+    pill.textContent = "inactive"; pill.className="pill red";
+    sub.textContent = "Top up any amount of CR to switch ads off for 30 days.";
+  }
+}
+
+/* YouTube membership — endpoint belum pasti ada, fallback preview */
+async function loadYtMembership(){
+  const pill = document.getElementById("w-yt-pill");
+  const sub = document.getElementById("w-yt-sub");
+  try{
+    const data = await gasGet("getmembershipstatus");
+    if(data.active){
+      pill.textContent = data.tier || "active"; pill.className="pill green";
+      sub.textContent = "Your channel membership is linked — bonus CR applied monthly.";
+    } else {
+      pill.textContent = "not linked"; pill.className="pill";
+      sub.textContent = "Link your channel membership to get bonus CR every month.";
+    }
+  }catch(e){
+    pill.innerHTML = `not linked <span class="demo-tag">preview</span>`; pill.className="pill";
+    sub.textContent = "Submit your channel membership screenshot to get it linked.";
+  }
+}
+
+/* Support tickets — endpoint belum pasti ada, fallback ringkas */
+async function loadTickets(){
+  const body = document.getElementById("w-tickets-body");
+  try{
+    const data = await gasGet("gettickets");
+    const items = data.tickets || [];
+    if(!items.length){ body.innerHTML = ""; return; }
+    body.innerHTML = `<div class="mini-list" style="margin-top:4px">` + items.slice(0,3).map(t=>`
+      <div class="mini-row"><div class="mr-name">${esc(t.subject||"Ticket")}</div><span class="pill ${t.status==="open"?"gold":""}">${esc(t.status||"")}</span></div>
+    `).join("") + `</div>`;
+  }catch(e){ body.innerHTML = ""; }
+}
+function openLiveChat(){
+  if(typeof Tawk_API !== "undefined" && Tawk_API.toggle){ Tawk_API.toggle(); }
+  else { toast("Chat widget isn't loaded on this page — reach us from the main site."); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LAYOUT ENGINE — reorder (drag) + hide, jalan di PC & mobile
+   lewat Pointer Events (satu kode utk mouse & touch).
+══════════════════════════════════════════════════════════════ */
+const DEFAULT_ORDER = ["balance","claim","leaderboard","badges","vault","history","adfree","ytmembership","support"];
+const LAYOUT_KEY = "rdb_dashboard_layout";
+
+function loadLayout(){
+  try{
+    const raw = JSON.parse(localStorage.getItem(LAYOUT_KEY) || "null");
+    if(!raw || !raw.order) return {order:[...DEFAULT_ORDER], hidden:[]};
+    // gabungin widget baru yang mungkin ditambah di update berikutnya
+    const known = new Set(raw.order);
+    DEFAULT_ORDER.forEach(id => { if(!known.has(id)) raw.order.push(id); });
+    return {order: raw.order, hidden: raw.hidden || []};
+  }catch(e){ return {order:[...DEFAULT_ORDER], hidden:[]}; }
+}
+function saveLayout(layout){ localStorage.setItem(LAYOUT_KEY, JSON.stringify(layout)); }
+
+let layout = loadLayout();
+
+function applyLayout(){
+  const grid = document.getElementById("dash-grid");
+  layout.order.forEach((id, idx) => {
+    const el = grid.querySelector(`[data-wid="${id}"]`);
+    if(!el) return;
+    el.style.order = idx;
+    el.dataset.hidden = layout.hidden.includes(id) ? "1" : "0";
+  });
+}
+function hideWidget(id){
+  if(!layout.hidden.includes(id)) layout.hidden.push(id);
+  saveLayout(layout);
+  applyLayout();
+  toast("Widget hidden — reset layout to bring it back.");
+}
+function resetLayout(){
+  layout = {order:[...DEFAULT_ORDER], hidden:[]};
+  saveLayout(layout);
+  applyLayout();
+  toast("Layout reset to default.");
+}
+
+function toggleCustomize(){
+  const on = document.body.classList.toggle("customize-on");
+  document.getElementById("customize-toggle").classList.toggle("active", on);
+  document.getElementById("customize-bar").classList.toggle("show", on);
+}
+
+/* Drag reorder via Pointer Events — bekerja sama di mouse & touch */
+function initDragReorder(){
+  const grid = document.getElementById("dash-grid");
+  let dragEl = null, pointerId = null;
+
+  grid.querySelectorAll(".drag-handle").forEach(handle=>{
+    handle.addEventListener("pointerdown", e=>{
+      dragEl = handle.closest(".widget");
+      pointerId = e.pointerId;
+      handle.setPointerCapture(pointerId);
+      dragEl.classList.add("dragging");
+      e.preventDefault();
+    });
+  });
+
+  grid.addEventListener("pointermove", e=>{
+    if(!dragEl || e.pointerId !== pointerId) return;
+    const overEl = document.elementFromPoint(e.clientX, e.clientY);
+    const overWidget = overEl && overEl.closest(".widget");
+    if(!overWidget || overWidget === dragEl || overWidget.dataset.hidden === "1") return;
+    const ids = layout.order.filter(id => !layout.hidden.includes(id) || true);
+    const fromId = dragEl.dataset.wid, toId = overWidget.dataset.wid;
+    const fromIdx = layout.order.indexOf(fromId), toIdx = layout.order.indexOf(toId);
+    if(fromIdx === -1 || toIdx === -1) return;
+    layout.order.splice(fromIdx, 1);
+    layout.order.splice(toIdx, 0, fromId);
+    applyLayout();
+  });
+
+  function endDrag(e){
+    if(!dragEl) return;
+    dragEl.classList.remove("dragging");
+    dragEl.classList.add("drop-flash");
+    setTimeout(()=>dragEl && dragEl.classList.remove("drop-flash"), 400);
+    saveLayout(layout);
+    dragEl = null; pointerId = null;
+  }
+  grid.addEventListener("pointerup", endDrag);
+  grid.addEventListener("pointercancel", endDrag);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BOOT
+══════════════════════════════════════════════════════════════ */
+function enterDashboard(){
+  document.getElementById("login-gate").style.display = "none";
+  document.getElementById("dash-shell").style.display = "block";
+  renderProfileHeader();
+  renderBadgesRow();
+  renderBadgeGrid();
+  renderAdFree();
+  applyLayout();
+  initDragReorder();
+
+  document.getElementById("w-balance-num").innerHTML = `${Number(sess.balance).toLocaleString()} <small>CR</small>`;
+  document.getElementById("w-balance-sub").textContent = `Lifetime: ${Number(sess.lifetimeCr||0).toLocaleString()} CR earned`;
+
+  refreshBalance();
+  initClaimState();
+  initLbVisibility();
+  loadRank();
+  loadVault();
+  loadYtMembership();
+  loadTickets();
+}
+
+window.addEventListener("DOMContentLoaded", ()=>{
+  sess = loadSession();
+  if(sess){ enterDashboard(); }
+  else { document.getElementById("lg-email").focus(); }
+});
+document.getElementById("lg-email")?.addEventListener("keydown", e=>{ if(e.key==="Enter") lgSendOtp(); });
+document.getElementById("lg-otp")?.addEventListener("keydown", e=>{ if(e.key==="Enter") lgVerifyOtp(); });
+</script>
+</body>
+</html>

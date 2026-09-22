@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /dashboard.html
+Disallow: /library.html
+Disallow: /request.html
+
+Sitemap: https://rothed-db.com/sitemap.xml

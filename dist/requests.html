@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request Game — RothedDB</title>
+<meta name="description" content="Minta game yang belum ada di RothedDB dan vote request orang lain. Voting 1x per IP, hasilnya jadi prioritas konten & harga CR."/>
+<link rel="canonical" href="https://rothed-db.com/requests.html"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://ajvdywctnfclfvmnghwo.supabase.co"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"/>
+<style>
+  :root {
+    --bg:           #03050d;
+    --bg2:          #060a14;
+    --bg3:          #090e1a;
+    --card:         #0b1020;
+    --card-hi:      #0f1628;
+    --border:       #131d30;
+    --border-hi:    #1d2e50;
+    --gold:         #f7c948;
+    --gold-dim:     #c49820;
+    --gold-faint:   rgba(247,201,72,.06);
+    --gold-line:    rgba(247,201,72,.22);
+    --blue:         #3d8eff;
+    --blue-dim:     rgba(61,142,255,.12);
+    --green:        #17d974;
+    --green-dim:    rgba(23,217,116,.12);
+    --green-line:   rgba(23,217,116,.28);
+    --amber:        #f0a020;
+    --amber-dim:    rgba(240,160,32,.12);
+    --red:          #f04848;
+    --red-dim:      rgba(240,72,72,.1);
+    --text:         #d4e0f4;
+    --text-dim:     #a0bfdf;
+    --text-muted:   #7a96bc;
+    --radius:       12px;
+    --font-brand:   'Bebas Neue', sans-serif;
+    --font-head:    'Outfit', sans-serif;
+    --font-body:    'Inter', sans-serif;
+    --font-mono:    'JetBrains Mono', monospace;
+    --transition:   all .16s ease;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text); font-family: var(--font-body);
+    font-weight: 500; min-height: 100vh; -webkit-font-smoothing: antialiased;
+    display: flex; justify-content: center; padding: 24px 14px 90px;
+  }
+  .wrap { width: 100%; max-width: 720px; }
+
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted);
+    font-family: var(--font-mono); font-size: 12px; text-decoration: none;
+    margin-bottom: 18px; transition: var(--transition);
+  }
+  .back-link:hover { color: var(--gold); }
+
+  .brand-row { margin-bottom: 4px; }
+  .brand { font-family: var(--font-brand); font-size: 27px; letter-spacing: 1px; color: var(--gold); }
+  .page-sub { font-size: 12.5px; color: var(--text-muted); line-height: 1.55; margin: 4px 0 16px; }
+
+  .prio-banner {
+    display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+    background: linear-gradient(135deg, var(--gold-faint), transparent);
+    border: 1px solid var(--gold-line); border-radius: 10px; margin-bottom: 18px;
+    text-decoration: none; color: var(--text); transition: var(--transition);
+  }
+  .prio-banner:hover { border-color: var(--gold-dim); background: rgba(247,201,72,.1); }
+  .prio-banner .pb-icon { font-size: 18px; flex-shrink: 0; }
+  .prio-banner .pb-text { flex: 1; font-size: 12.5px; line-height: 1.4; }
+  .prio-banner .pb-text b { color: var(--gold); font-family: var(--font-head); }
+  .prio-banner .pb-arrow { color: var(--gold); font-family: var(--font-mono); font-size: 13px; }
+
+  .search-wrap { position: relative; margin-bottom: 10px; }
+  #boardSearch {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 10px; padding: 11px 14px 11px 38px; color: var(--text);
+    font-family: var(--font-body); font-size: 14px; transition: var(--transition);
+  }
+  #boardSearch:focus { outline: none; border-color: var(--gold-line); }
+  .search-wrap svg {
+    position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+    color: var(--text-muted); pointer-events: none;
+  }
+
+  .seg-row { display: flex; gap: 6px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 2px; }
+  .seg-btn {
+    flex-shrink: 0; background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 13px; color: var(--text-muted);
+    font-family: var(--font-mono); font-size: 11.5px; cursor: pointer;
+    transition: var(--transition); white-space: nowrap;
+  }
+  .seg-btn:hover { border-color: var(--border-hi); }
+  .seg-btn.active { background: var(--gold-faint); border-color: var(--gold-line); color: var(--gold); font-weight: 600; }
+
+  .chip-row { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 2px; }
+  .chip {
+    flex-shrink: 0; background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 999px; padding: 5px 12px; color: var(--text-muted);
+    font-family: var(--font-mono); font-size: 11px; cursor: pointer; transition: var(--transition);
+  }
+  .chip:hover { border-color: var(--border-hi); }
+  .chip.active { background: var(--blue-dim); border-color: rgba(61,142,255,.4); color: var(--blue); font-weight: 600; }
+
+  .zero-panel {
+    background: var(--card); border: 1px dashed var(--border-hi); border-radius: 10px;
+    padding: 13px 14px; margin-bottom: 16px; display: none;
+  }
+  .zero-panel.show { display: block; }
+  .zero-panel .zp-title {
+    font-family: var(--font-head); font-size: 12px; font-weight: 700;
+    color: var(--text-dim); margin-bottom: 9px; letter-spacing: .2px;
+  }
+  .zp-list { display: flex; flex-wrap: wrap; gap: 7px; }
+  .zp-item {
+    display: inline-flex; align-items: center; gap: 6px; background: var(--bg3);
+    border: 1px solid var(--border); border-radius: 999px; padding: 5px 6px 5px 11px;
+    font-size: 11.5px; color: var(--text-dim);
+  }
+  .zp-item .zp-count { color: var(--text-muted); font-family: var(--font-mono); font-size: 10px; }
+  .zp-item button {
+    background: var(--gold-faint); border: 1px solid var(--gold-line); color: var(--gold);
+    border-radius: 999px; padding: 3px 9px; font-family: var(--font-mono); font-size: 10px;
+    cursor: pointer; transition: var(--transition);
+  }
+  .zp-item button:hover { background: rgba(247,201,72,.16); }
+
+  .req-list { display: flex; flex-direction: column; gap: 10px; }
+  .req-card {
+    display: flex; gap: 12px; background: linear-gradient(160deg, var(--card-hi) 0%, var(--card) 100%);
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 13px 14px;
+    transition: var(--transition);
+  }
+  .req-card.voted { border-color: var(--green-line); }
+
+  .vote-btn {
+    flex-shrink: 0; width: 52px; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 2px; background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 9px; padding: 8px 4px; cursor: pointer; transition: var(--transition);
+    color: var(--text-dim); font-family: var(--font-head);
+  }
+  .vote-btn:hover:not(:disabled) { border-color: var(--gold-line); }
+  .vote-btn[aria-pressed="true"] { background: var(--green-dim); border-color: var(--green-line); color: var(--green); }
+  .vote-btn:disabled { opacity: .55; cursor: not-allowed; }
+  .vote-btn .vb-arrow { font-size: 15px; line-height: 1; }
+  .vote-btn .vb-count { font-size: 15px; font-weight: 700; line-height: 1.2; }
+
+  .req-body { flex: 1; min-width: 0; }
+  .req-top { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
+  .req-title {
+    font-family: var(--font-head); font-size: 14px; font-weight: 700; color: var(--text);
+    line-height: 1.35; flex: 1; word-break: break-word;
+  }
+  .badge {
+    flex-shrink: 0; font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .3px;
+    border-radius: 5px; padding: 2px 7px; white-space: nowrap;
+  }
+  .badge-plat  { color: var(--blue); background: var(--blue-dim); border: 1px solid rgba(61,142,255,.28); }
+  .badge-status-pending     { color: var(--text-muted); background: var(--bg3); border: 1px solid var(--border); }
+  .badge-status-in_progress { color: var(--amber); background: var(--amber-dim); border: 1px solid rgba(240,160,32,.3); }
+  .badge-status-done        { color: var(--green); background: var(--green-dim); border: 1px solid var(--green-line); }
+
+  .req-note {
+    font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 6px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .req-meta { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 10.5px; color: var(--text-muted); }
+  .req-meta a { color: var(--green); text-decoration: none; }
+  .req-meta a:hover { text-decoration: underline; }
+
+  .state-box { text-align: center; padding: 44px 20px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
+  .state-box .icon { font-size: 34px; margin-bottom: 10px; }
+  .state-box h3 { font-family: var(--font-head); font-size: 14px; margin-bottom: 6px; color: var(--text); }
+  .state-box p { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+  .state-box button.retry-btn {
+    margin-top: 14px; background: var(--card-hi); border: 1px solid var(--border-hi); color: var(--gold);
+    font-family: var(--font-mono); font-size: 12px; padding: 8px 18px; border-radius: 8px; cursor: pointer;
+  }
+
+  .skel-list { display: flex; flex-direction: column; gap: 10px; }
+  .skel-card { height: 66px; border-radius: var(--radius); background: linear-gradient(90deg, var(--card) 25%, var(--card-hi) 37%, var(--card) 63%); background-size: 400% 100%; animation: skel 1.4s ease infinite; }
+  @keyframes skel { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+
+  .load-more-btn {
+    width: 100%; margin-top: 14px; padding: 12px; background: var(--card); border: 1px dashed var(--border-hi);
+    border-radius: 10px; color: var(--text-dim); font-family: var(--font-mono); font-size: 12px; cursor: pointer;
+    transition: var(--transition);
+  }
+  .load-more-btn:hover { border-color: var(--gold-line); color: var(--gold); }
+  .load-more-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  .fab-open-btn {
+    position: fixed; right: 18px; bottom: 22px; z-index: 40;
+    display: flex; align-items: center; gap: 7px; padding: 13px 18px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+    color: #1a1200; border: none; border-radius: 999px; font-family: var(--font-head);
+    font-weight: 700; font-size: 13px; cursor: pointer; box-shadow: 0 4px 18px rgba(0,0,0,.4);
+    transition: var(--transition);
+  }
+  .fab-open-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+  .form-card {
+    display: none; background: linear-gradient(160deg, var(--card-hi) 0%, var(--card) 100%);
+    border: 1px solid var(--gold-line); border-radius: var(--radius); padding: 20px; margin-bottom: 18px;
+  }
+  .form-card.open { display: block; }
+  .form-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .form-head h2 { font-family: var(--font-head); font-size: 16px; color: var(--text); }
+  .form-close-btn { background: none; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; line-height: 1; padding: 4px; }
+  .form-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+
+  label { display: block; font-size: 11.5px; font-weight: 600; color: var(--text-dim); margin-bottom: 5px; margin-top: 14px; }
+  label:first-of-type { margin-top: 0; }
+  select, textarea, input[type=text] {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 12px; color: var(--text); font-family: var(--font-body); font-size: 13.5px;
+    transition: var(--transition);
+  }
+  select:focus, textarea:focus, input:focus { outline: none; border-color: var(--gold-line); }
+  textarea { resize: vertical; min-height: 70px; line-height: 1.5; }
+  .field-hint { font-size: 10.5px; color: var(--text-muted); margin-top: 4px; }
+
+  .hp-field { position: absolute !important; left: -9999px !important; top: -9999px !important;
+              width: 1px !important; height: 1px !important; opacity: 0 !important; overflow: hidden; }
+
+  .similar-box {
+    margin-top: 12px; padding: 11px 12px; border-radius: 9px; background: var(--blue-dim);
+    border: 1px solid rgba(61,142,255,.28); display: none;
+  }
+  .similar-box.show { display: block; }
+  .similar-box .sb-title { font-family: var(--font-mono); font-size: 10.5px; color: var(--blue); margin-bottom: 8px; letter-spacing: .3px; }
+  .similar-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 1px solid rgba(61,142,255,.15); }
+  .similar-row:first-of-type { border-top: none; }
+  .similar-row .sr-name { flex: 1; font-size: 12.5px; color: var(--text); min-width: 0; word-break: break-word; }
+  .similar-row .sr-votes { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-muted); flex-shrink: 0; }
+  .similar-row button {
+    flex-shrink: 0; background: var(--green-dim); border: 1px solid var(--green-line); color: var(--green);
+    border-radius: 7px; padding: 5px 10px; font-family: var(--font-mono); font-size: 10.5px; cursor: pointer;
+  }
+
+  .catalog-box {
+    margin-top: 12px; padding: 11px 12px; border-radius: 9px; background: var(--green-dim);
+    border: 1px solid var(--green-line); display: none;
+  }
+  .catalog-box.show { display: block; }
+  .catalog-box p { font-size: 12px; color: var(--text); line-height: 1.5; margin-bottom: 8px; }
+  .catalog-box a { display: inline-flex; align-items: center; gap: 5px; color: var(--green); font-family: var(--font-mono); font-size: 11.5px; text-decoration: none; }
+  .catalog-box a:hover { text-decoration: underline; }
+
+  .form-err { color: var(--red); font-size: 11.5px; margin-top: 10px; display: none; }
+  .form-err.show { display: block; }
+
+  .form-submit-btn {
+    width: 100%; margin-top: 18px; padding: 13px; border: none; border-radius: 8px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%); color: #1a1200;
+    font-family: var(--font-head); font-weight: 700; font-size: 13.5px; cursor: pointer; transition: var(--transition);
+  }
+  .form-submit-btn:hover:not(:disabled) { filter: brightness(1.08); }
+  .form-submit-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  #toast {
+    position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%) translateY(12px);
+    background: var(--card-hi); border: 1px solid var(--border-hi); color: var(--text);
+    font-size: 12.5px; padding: 11px 18px; border-radius: 999px; box-shadow: 0 4px 18px rgba(0,0,0,.4);
+    opacity: 0; pointer-events: none; transition: all .22s ease; z-index: 60; max-width: 90vw; text-align: center;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 420px) {
+    body { padding: 18px 10px 90px; }
+    .req-title { font-size: 13.5px; }
+    .fab-open-btn span.fab-label { display: none; }
+    .fab-open-btn { padding: 14px; border-radius: 50%; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="/" class="back-link">← <span data-i18n="backLink">Kembali ke RothedDB</span></a>
+
+  <div class="brand-row"><div class="brand" data-i18n="boardTitle">REQUEST BOARD</div></div>
+  <div class="page-sub" data-i18n="boardSub">Minta game yang belum ada, atau vote request orang lain. 1 vote per IP.</div>
+
+  <a class="prio-banner" href="/request.html">
+    <span class="pb-icon">⚡</span>
+    <span class="pb-text" data-i18n-html="bannerText"><b>Mau cepat?</b> Request Prioritas (Premium) — dikerjakan lebih dulu, bayar CR.</span>
+    <span class="pb-arrow">→</span>
+  </a>
+
+  <div class="search-wrap">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="boardSearch" autocomplete="off" spellcheck="false"/>
+  </div>
+
+  <div class="seg-row" id="sortRow" role="tablist">
+    <button class="seg-btn" data-sort="new"      data-i18n="sortNew">Newest</button>
+    <button class="seg-btn" data-sort="trending" data-i18n="sortTrending">Trending</button>
+    <button class="seg-btn" data-sort="top"      data-i18n="sortTop">Most Voted</button>
+  </div>
+
+  <div class="chip-row" id="platRow">
+    <button class="chip" data-plat="" data-i18n="platAll">All</button>
+    <button class="chip" data-plat="PS2">PS2</button>
+    <button class="chip" data-plat="PS3">PS3</button>
+    <button class="chip" data-plat="PS4">PS4</button>
+    <button class="chip" data-plat="PSP">PSP</button>
+    <button class="chip" data-plat="Switch">Switch</button>
+    <button class="chip" data-plat="PC">PC</button>
+  </div>
+
+  <div class="seg-row" id="statusRow">
+    <button class="seg-btn" data-status="open" data-i18n="statusOpen">Open</button>
+    <button class="seg-btn" data-status="done" data-i18n="statusDone">Done</button>
+  </div>
+
+  <div class="zero-panel" id="zeroPanel">
+    <div class="zp-title" data-i18n="zeroPanelTitle">🔍 Sering dicari tapi belum ada</div>
+    <div class="zp-list" id="zeroList"></div>
+  </div>
+
+  <div class="form-card" id="formCard">
+    <div class="form-head">
+      <h2 data-i18n="formHeading">Request Game Baru</h2>
+      <button class="form-close-btn" onclick="closeForm()" aria-label="Close">×</button>
+    </div>
+    <div class="form-sub" data-i18n="formSub">Gratis &amp; anonim. Kalau game-nya udah ada yang minta, mending vote aja daripada bikin duplikat.</div>
+
+    <form id="reqForm" onsubmit="return false;">
+      <div class="hp-field" aria-hidden="true">
+        <label for="hp-website">Website</label>
+        <input type="text" id="hp-website" name="website" tabindex="-1" autocomplete="off"/>
+      </div>
+
+      <label for="fTitle" data-i18n="formTitleLabel">Judul Game</label>
+      <input type="text" id="fTitle" maxlength="120" autocomplete="off"/>
+
+      <label for="fPlatform" data-i18n="formPlatformLabel">Platform</label>
+      <select id="fPlatform">
+        <option value="PS2">PS2</option>
+        <option value="PS3">PS3</option>
+        <option value="PS4">PS4</option>
+        <option value="PSP">PSP</option>
+        <option value="Switch">Nintendo Switch</option>
+        <option value="PC">PC</option>
+      </select>
+
+      <label for="fNote" data-i18n="formNoteLabel">Catatan (opsional)</label>
+      <textarea id="fNote" maxlength="300" data-i18n-ph="formNotePh"></textarea>
+
+      <div class="similar-box" id="similarBox">
+        <div class="sb-title" data-i18n="similarTitle">Mungkin maksudmu…</div>
+        <div id="similarList"></div>
+      </div>
+
+      <div class="catalog-box" id="catalogBox">
+        <p data-i18n="catalogFound">Game ini udah ada di koleksi RothedDB — langsung cek aja:</p>
+        <a id="catalogLink" href="#" target="_blank" rel="noopener">→ <span id="catalogLinkText"></span></a>
+      </div>
+
+      <button class="form-submit-btn" id="formSubmitBtn" onclick="submitNewRequest()" data-i18n="formSubmit">Submit Request</button>
+      <div class="form-err" id="formErr"></div>
+    </form>
+  </div>
+
+  <div id="listArea">
+    <div class="skel-list" id="skeleton">
+      <div class="skel-card"></div><div class="skel-card"></div><div class="skel-card"></div>
+      <div class="skel-card"></div><div class="skel-card"></div>
+    </div>
+    <div class="req-list" id="reqList" style="display:none"></div>
+    <div class="state-box" id="emptyState" style="display:none">
+      <div class="icon">🗒️</div>
+      <h3 id="emptyTitle" data-i18n="emptyOpenTitle">Belum ada request</h3>
+      <p id="emptyBody" data-i18n="emptyOpenBody">Jadi yang pertama minta game favoritmu.</p>
+    </div>
+    <div class="state-box" id="errorState" style="display:none">
+      <div class="icon">📡</div>
+      <h3 data-i18n="errorTitle">Gagal memuat</h3>
+      <p data-i18n="errorBody">Koneksi ke server bermasalah.</p>
+      <button class="retry-btn" onclick="reloadBoard()" data-i18n="retryBtn">Coba Lagi</button>
+    </div>
+    <button class="load-more-btn" id="loadMoreBtn" style="display:none" onclick="loadMore()" data-i18n="loadMore">Muat lebih banyak</button>
+  </div>
+</div>
+
+<button class="fab-open-btn" onclick="openForm()">
+  <span>＋</span><span class="fab-label" data-i18n="fabLabel">Request Game</span>
+</button>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+//  RothedDB — Request Board (publik, anonim, backend Supabase)
+//  Halaman ini SENGAJA terpisah dari template.html/request_template.html:
+//  request_template.html = jalur PREMIUM member (login, approval, GAS/CR).
+//  File ini = board publik, vote 1x/IP, tanpa login sama sekali.
+// ════════════════════════════════════════════════════════════════
+
+const SUPABASE_URL  = 'https://ajvdywctnfclfvmnghwo.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqdmR5d2N0bmZjbGZ2bW5naHdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NjA5MTYsImV4cCI6MjA5MzAzNjkxNn0.ehSzvjr-oPkapqk6ue_5Gg5cgGjsnnrtkC28v23Mk0o';
+
+const PAGE_SIZE          = 20;
+const SEARCH_DEBOUNCE_MS = 350;
+const ZERO_MIN_COUNT     = 3;
+const MIN_SUBMIT_MS      = 2500;
+const PLATFORMS = ['PS2','PS3','PS4','PSP','Switch','PC'];
+
+async function rpc(fn, params) {
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_ANON,
+        Authorization: 'Bearer ' + SUPABASE_ANON,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(params || {})
+    });
+    let data = null;
+    try { data = await r.json(); } catch (e) {}
+    if (!r.ok) return { data: null, error: (data && data.message) || r.statusText || 'error' };
+    return { data, error: null };
+  } catch (e) {
+    return { data: null, error: e.message || 'network_error' };
+  }
+}
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function getDeviceId() {
+  try {
+    let id = localStorage.getItem('rdb_device_id');
+    if (!id) { id = crypto.randomUUID(); localStorage.setItem('rdb_device_id', id); }
+    return id;
+  } catch (e) { return null; }
+}
+
+function gameSlug(name, platform) {
+  let txt = `${name}-${platform}`.toLowerCase().trim();
+  txt = txt.replace(/[^a-z0-9 -]/g, '');
+  txt = txt.replace(/ +/g, '-');
+  txt = txt.replace(/-+/g, '-').replace(/^-+|-+$/g, '');
+  return txt || 'game';
+}
+
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  if (m === 0) return n;
+  if (n === 0) return m;
+  let prev = new Uint16Array(n + 1);
+  let curr = new Uint16Array(n + 1);
+  for (let j = 0; j <= n; j++) prev[j] = j;
+  for (let i = 1; i <= m; i++) {
+    curr[0] = i;
+    for (let j = 1; j <= n; j++)
+      curr[j] = a[i-1] === b[j-1] ? prev[j-1]
+        : 1 + Math.min(prev[j], curr[j-1], prev[j-1]);
+    [prev, curr] = [curr, prev];
+  }
+  return prev[n];
+}
+function fuzzyScore(target, query) {
+  if (!target || !query) return 0;
+  const t = target.toLowerCase();
+  const q = query.toLowerCase();
+  if (t === q) return 100;
+  if (t.startsWith(q)) return 97;
+  if (t.includes(q)) return 88;
+  let best = 0;
+  const wLen = Math.min(q.length + 2, t.length);
+  for (let i = 0; i <= t.length - q.length + 2; i++) {
+    const window = t.slice(i, i + wLen);
+    const dist = levenshtein(window, q);
+    const maxLen = Math.max(window.length, q.length);
+    const sim = Math.round((1 - dist / maxLen) * 100);
+    if (sim > best) best = sim;
+  }
+  let si = 0;
+  for (let ci = 0; ci < t.length && si < q.length; ci++) {
+    if (t[ci] === q[si]) si++;
+  }
+  if (si === q.length) best = Math.min(100, best + 10);
+  return best;
+}
+function normTitleLocal(v) {
+  return (v || '').toLowerCase().replace(/\.[^.]+$/, '')
+    .replace(/[–—_-]+/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+let _catalog = null;
+let _catalogFlat = null;
+async function ensureCatalog() {
+  if (_catalog) return _catalog;
+  try {
+    const r = await fetch('/database.json', { cache: 'no-cache' });
+    _catalog = r.ok ? await r.json() : {};
+  } catch (e) { _catalog = {}; }
+  _catalogFlat = [];
+  Object.keys(_catalog).forEach(plat => {
+    (_catalog[plat] || []).forEach(g => {
+      if (g && g.name) _catalogFlat.push({ name: g.name, platform: plat, slug: gameSlug(g.name, plat) });
+    });
+  });
+  return _catalog;
+}
+function findCatalogMatch(title, platform) {
+  if (!_catalogFlat || !title || title.trim().length < 2) return null;
+  const qn = normTitleLocal(title);
+  let best = null, bestScore = 0;
+  const pool = platform ? _catalogFlat.filter(g => g.platform === platform) : _catalogFlat;
+  const scan = list => {
+    list.forEach(g => {
+      const score = normTitleLocal(g.name) === qn ? 100 : fuzzyScore(g.name, title);
+      if (score > bestScore) { bestScore = score; best = g; }
+    });
+  };
+  scan(pool);
+  if (bestScore < 90 && platform) scan(_catalogFlat);
+  return bestScore >= 90 ? best : null;
+}
+
+const I18N = {
+  en: {
+    backLink: 'Back to RothedDB',
+    boardTitle: 'REQUEST BOARD',
+    boardSub: 'Ask for a game that isn\u2019t here yet, or vote on others. 1 vote per IP.',
+    bannerText: '<b>Want it faster?</b> Priority Request (Premium) \u2014 done first, pay CR.',
+    sortNew: 'Newest', sortTrending: 'Trending', sortTop: 'Most Voted',
+    platAll: 'All', statusOpen: 'Open', statusDone: 'Done',
+    zeroPanelTitle: '\ud83d\udd0d Often searched, not here yet',
+    fabLabel: 'Request Game',
+    formHeading: 'New Game Request',
+    formSub: 'Free & anonymous. If it\u2019s already requested, vote instead of duplicating.',
+    formTitleLabel: 'Game Title', formPlatformLabel: 'Platform', formNoteLabel: 'Note (optional)',
+    formNotePh: 'Region, state, DLC, etc.',
+    formSubmit: 'Submit Request', formSubmitting: 'Submitting\u2026',
+    similarTitle: 'Did you mean\u2026', catalogFound: 'This game is already in RothedDB \u2014 check it out:',
+    emptyOpenTitle: 'No requests yet', emptyOpenBody: 'Be the first to ask for your favorite game.',
+    emptyDoneTitle: 'Nothing fulfilled yet', emptyDoneBody: 'Fulfilled requests will show up here.',
+    errorTitle: 'Failed to load', errorBody: 'Connection to the server had a problem.', retryBtn: 'Try Again',
+    loadMore: 'Load more',
+    voteAlready: 'You (or your network) already voted this.',
+    voteRateLimited: 'Too many votes \u2014 try again later.',
+    voteClosed: 'This request is closed for voting.',
+    voteNoIp: 'Couldn\u2019t verify your connection \u2014 try again.',
+    voteError: 'Vote failed, try again.',
+    submitInvalidTitle: 'Enter a valid game title.',
+    submitInvalidPlatform: 'Pick a platform.',
+    submitRateLimited: 'You\u2019ve hit the new-request limit for today.',
+    submitDuplicate: 'Already requested \u2014 voted for you instead.',
+    submitOk: 'Request submitted!',
+    submitNoIp: 'Couldn\u2019t verify your connection \u2014 try again.',
+    submitBusy: 'Slow down a bit before submitting.',
+    submitGeneric: 'Failed to submit, try again.',
+    jadikanRequest: 'Make a request',
+    catalogLinkView: 'View in library',
+  },
+  id: {
+    backLink: 'Kembali ke RothedDB',
+    boardTitle: 'REQUEST BOARD',
+    boardSub: 'Minta game yang belum ada, atau vote request orang lain. 1 vote per IP.',
+    bannerText: '<b>Mau cepat?</b> Request Prioritas (Premium) \u2014 dikerjakan lebih dulu, bayar CR.',
+    sortNew: 'Terbaru', sortTrending: 'Trending', sortTop: 'Vote Terbanyak',
+    platAll: 'Semua', statusOpen: 'Open', statusDone: 'Selesai',
+    zeroPanelTitle: '\ud83d\udd0d Sering dicari tapi belum ada',
+    fabLabel: 'Request Game',
+    formHeading: 'Request Game Baru',
+    formSub: 'Gratis & anonim. Kalau udah ada yang minta, mending vote aja daripada bikin duplikat.',
+    formTitleLabel: 'Judul Game', formPlatformLabel: 'Platform', formNoteLabel: 'Catatan (opsional)',
+    formNotePh: 'Region, state, DLC, dll.',
+    formSubmit: 'Submit Request', formSubmitting: 'Mengirim\u2026',
+    similarTitle: 'Mungkin maksudmu\u2026', catalogFound: 'Game ini udah ada di koleksi RothedDB \u2014 langsung cek aja:',
+    emptyOpenTitle: 'Belum ada request', emptyOpenBody: 'Jadi yang pertama minta game favoritmu.',
+    emptyDoneTitle: 'Belum ada yang selesai', emptyDoneBody: 'Request yang udah dikerjain bakal muncul di sini.',
+    errorTitle: 'Gagal memuat', errorBody: 'Koneksi ke server bermasalah.', retryBtn: 'Coba Lagi',
+    loadMore: 'Muat lebih banyak',
+    voteAlready: 'Kamu (atau jaringanmu) udah vote ini.',
+    voteRateLimited: 'Kebanyakan vote \u2014 coba lagi nanti.',
+    voteClosed: 'Request ini udah ditutup buat voting.',
+    voteNoIp: 'Gagal verifikasi koneksi \u2014 coba lagi.',
+    voteError: 'Vote gagal, coba lagi.',
+    submitInvalidTitle: 'Isi judul game yang valid.',
+    submitInvalidPlatform: 'Pilih platform dulu.',
+    submitRateLimited: 'Kamu udah kena limit request baru hari ini.',
+    submitDuplicate: 'Udah ada yang request \u2014 otomatis divote-in buat kamu.',
+    submitOk: 'Request terkirim!',
+    submitNoIp: 'Gagal verifikasi koneksi \u2014 coba lagi.',
+    submitBusy: 'Pelan-pelan dulu sebelum submit.',
+    submitGeneric: 'Gagal submit, coba lagi.',
+    jadikanRequest: 'Jadikan request',
+    catalogLinkView: 'Lihat di koleksi',
+  }
+};
+let _locale = 'en';
+function t(key) { return (I18N[_locale] || I18N.en)[key] || I18N.en[key] || key; }
+
+function applyLocale() {
+  document.documentElement.setAttribute('lang', _locale);
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.getAttribute('data-i18n-html')); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph'))); });
+  const sb = document.getElementById('boardSearch');
+  if (sb) sb.setAttribute('placeholder', _locale === 'id' ? 'Cari game...' : 'Search games...');
+  const clt = document.getElementById('catalogLinkText');
+  if (clt) clt.textContent = t('catalogLinkView');
+  renderEmptyStateCopy();
+}
+
+async function initLocale() {
+  try {
+    const override = localStorage.getItem('rdb_lang_override');
+    if (override === 'id' || override === 'en') { _locale = override; applyLocale(); return; }
+  } catch (e) {}
+  try {
+    const cached = localStorage.getItem('rdb_country');
+    if (cached) { _locale = cached === 'ID' ? 'id' : 'en'; applyLocale(); return; }
+  } catch (e) {}
+  try {
+    const lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+    if (lang.startsWith('id')) { _locale = 'id'; applyLocale(); return; }
+  } catch (e) {}
+  applyLocale();
+}
+
+function relTime(iso) {
+  const d = new Date(iso).getTime();
+  if (isNaN(d)) return '';
+  const s = Math.max(0, Math.floor((Date.now() - d) / 1000));
+  const id = _locale === 'id';
+  if (s < 60)    return id ? 'baru saja' : 'just now';
+  if (s < 3600)  { const m = Math.floor(s/60);   return id ? `${m} menit lalu` : `${m}m ago`; }
+  if (s < 86400) { const h = Math.floor(s/3600); return id ? `${h} jam lalu`   : `${h}h ago`; }
+  const days = Math.floor(s/86400);
+  if (days < 30) return id ? `${days} hari lalu` : `${days}d ago`;
+  const months = Math.floor(days/30);
+  return id ? `${months} bulan lalu` : `${months}mo ago`;
+}
+
+let _toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+let state = {
+  sort: 'new', platform: '', status: 'open', q: '',
+  items: [], total: 0, loading: false, error: false,
+};
+let _searchTimer = null;
+let _voteInFlight = new Set();
+
+function initFilters() {
+  try { state.sort = localStorage.getItem('rdb_reqboard_sort') || 'new'; } catch (e) {}
+  document.querySelectorAll('#sortRow .seg-btn').forEach(b => b.classList.toggle('active', b.dataset.sort === state.sort));
+  document.querySelectorAll('#platRow .chip').forEach(b => b.classList.toggle('active', b.dataset.plat === state.platform));
+  document.querySelectorAll('#statusRow .seg-btn').forEach(b => b.classList.toggle('active', b.dataset.status === state.status));
+
+  document.getElementById('sortRow').addEventListener('click', e => {
+    const btn = e.target.closest('.seg-btn'); if (!btn) return;
+    state.sort = btn.dataset.sort;
+    try { localStorage.setItem('rdb_reqboard_sort', state.sort); } catch (er) {}
+    document.querySelectorAll('#sortRow .seg-btn').forEach(b => b.classList.toggle('active', b === btn));
+    reloadBoard();
+  });
+  document.getElementById('platRow').addEventListener('click', e => {
+    const btn = e.target.closest('.chip'); if (!btn) return;
+    state.platform = btn.dataset.plat;
+    document.querySelectorAll('#platRow .chip').forEach(b => b.classList.toggle('active', b === btn));
+    reloadBoard();
+  });
+  document.getElementById('statusRow').addEventListener('click', e => {
+    const btn = e.target.closest('.seg-btn'); if (!btn) return;
+    state.status = btn.dataset.status;
+    document.querySelectorAll('#statusRow .seg-btn').forEach(b => b.classList.toggle('active', b === btn));
+    reloadBoard();
+  });
+  document.getElementById('boardSearch').addEventListener('input', e => {
+    const v = e.target.value;
+    clearTimeout(_searchTimer);
+    _searchTimer = setTimeout(() => { state.q = v.trim(); reloadBoard(); }, SEARCH_DEBOUNCE_MS);
+  });
+}
+
+function renderEmptyStateCopy() {
+  const isDone = state.status === 'done';
+  const et = document.getElementById('emptyTitle');
+  const eb = document.getElementById('emptyBody');
+  if (et) et.textContent = t(isDone ? 'emptyDoneTitle' : 'emptyOpenTitle');
+  if (eb) eb.textContent = t(isDone ? 'emptyDoneBody'  : 'emptyOpenBody');
+}
+
+function setLoadingUI(loading) {
+  document.getElementById('skeleton').style.display = loading && !state.items.length ? 'flex' : 'none';
+}
+
+async function reloadBoard() {
+  state.items = []; state.total = 0; state.error = false;
+  renderEmptyStateCopy();
+  document.getElementById('errorState').style.display = 'none';
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('reqList').style.display = 'none';
+  document.getElementById('loadMoreBtn').style.display = 'none';
+  setLoadingUI(true);
+  await fetchPage(0, true);
+}
+
+async function loadMore() {
+  const btn = document.getElementById('loadMoreBtn');
+  btn.disabled = true; btn.textContent = t('loadMore') + '…';
+  await fetchPage(state.items.length, false);
+  btn.disabled = false; btn.textContent = t('loadMore');
+}
+
+async function fetchPage(offset, replace) {
+  state.loading = true;
+  const { data, error } = await rpc('list_requests', {
+    p_sort: state.sort, p_platform: state.platform || null, p_status: state.status,
+    p_q: state.q || null, p_limit: PAGE_SIZE, p_offset: offset
+  });
+  state.loading = false;
+  setLoadingUI(false);
+
+  if (error || !data || data.status !== 'ok') {
+    state.error = true;
+    if (replace) document.getElementById('errorState').style.display = 'block';
+    else showToast(t('errorBody'));
+    return;
+  }
+
+  state.total = data.total;
+  state.items = replace ? data.items : state.items.concat(data.items);
+  renderList();
+}
+
+function voteButtonHtml(g) {
+  const disabled = g.status === 'done' || g.status === 'rejected';
+  return `<button class="vote-btn" aria-pressed="${g.voted ? 'true' : 'false'}"
+            ${disabled ? 'disabled' : ''} onclick="onVoteClick(${g.id})" data-vid="${g.id}">
+            <span class="vb-arrow">▲</span><span class="vb-count">${g.vote_count}</span>
+          </button>`;
+}
+
+function cardHtml(g) {
+  const noteHtml = g.note ? `<div class="req-note">${esc(g.note)}</div>` : '';
+  const doneLink = (g.status === 'done' && g.fulfilled_url)
+    ? `<a href="${esc(g.fulfilled_url)}">${_locale==='id'?'Lihat save →':'View save →'}</a>` : '';
+  return `<div class="req-card${g.voted ? ' voted' : ''}" id="card-${g.id}">
+    ${voteButtonHtml(g)}
+    <div class="req-body">
+      <div class="req-top">
+        <div class="req-title">${esc(g.title)}</div>
+        <span class="badge badge-plat">${esc(g.platform)}</span>
+      </div>
+      ${noteHtml}
+      <div class="req-meta">
+        <span class="badge badge-status-${esc(g.status)}">${esc(g.status).replace('_',' ')}</span>
+        <span>${relTime(g.created_at)}</span>
+        ${doneLink}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderList() {
+  const listEl = document.getElementById('reqList');
+  if (!state.items.length) {
+    listEl.style.display = 'none';
+    document.getElementById('emptyState').style.display = 'block';
+    document.getElementById('loadMoreBtn').style.display = 'none';
+    return;
+  }
+  document.getElementById('emptyState').style.display = 'none';
+  listEl.style.display = 'flex';
+  listEl.innerHTML = state.items.map(cardHtml).join('');
+  document.getElementById('loadMoreBtn').style.display = state.items.length < state.total ? 'block' : 'none';
+}
+
+async function onVoteClick(id) {
+  if (_voteInFlight.has(id)) return;
+  const item = state.items.find(g => g.id === id);
+  if (!item || item.status === 'done' || item.status === 'rejected') return;
+  if (item.voted) return;
+
+  _voteInFlight.add(id);
+  const prevVoted = item.voted, prevCount = item.vote_count;
+  item.voted = true; item.vote_count = prevCount + 1;
+  patchCardDom(item);
+
+  const { data, error } = await rpc('cast_vote', { p_request_id: id, p_device: getDeviceId() });
+
+  if (error || !data) {
+    item.voted = prevVoted; item.vote_count = prevCount;
+    patchCardDom(item);
+    showToast(t('voteError'));
+  } else if (data.status === 'ok') {
+    item.vote_count = data.vote_count; item.voted = true;
+    patchCardDom(item);
+  } else if (data.status === 'already_voted') {
+    item.vote_count = data.vote_count; item.voted = true;
+    patchCardDom(item);
+    showToast(t('voteAlready'));
+  } else {
+    item.voted = prevVoted; item.vote_count = prevCount;
+    patchCardDom(item);
+    const map = { rate_limited: 'voteRateLimited', closed: 'voteClosed', no_ip: 'voteNoIp' };
+    showToast(t(map[data.status] || 'voteError'));
+  }
+  _voteInFlight.delete(id);
+}
+function patchCardDom(item) {
+  const card = document.getElementById('card-' + item.id);
+  if (!card) return;
+  card.outerHTML = cardHtml(item);
+}
+
+async function loadZeroPanel() {
+  const { data } = await rpc('top_zero_results', { p_limit: 8, p_min_count: ZERO_MIN_COUNT, p_days: 90 });
+  const items = (data && data.items) || [];
+  const panel = document.getElementById('zeroPanel');
+  if (!items.length) { panel.classList.remove('show'); return; }
+  document.getElementById('zeroList').innerHTML = items.map(z => `
+    <span class="zp-item">
+      ${esc(z.query)} <span class="zp-count">×${z.c}</span>
+      <button onclick="jadikanRequestFromZero('${esc(z.query).replace(/'/g,"\\'")}')">${t('jadikanRequest')}</button>
+    </span>`).join('');
+  panel.classList.add('show');
+}
+function jadikanRequestFromZero(q) {
+  openForm();
+  const f = document.getElementById('fTitle');
+  f.value = q; f.dispatchEvent(new Event('input'));
+  f.focus();
+}
+
+let _formOpenedAt = 0;
+let _similarTimer = null;
+let _catalogMatchFound = null;
+
+function openForm(prefillTitle) {
+  document.getElementById('formCard').classList.add('open');
+  _formOpenedAt = Date.now();
+  ensureCatalog();
+  if (prefillTitle) {
+    const f = document.getElementById('fTitle');
+    f.value = prefillTitle;
+    f.dispatchEvent(new Event('input'));
+  }
+  document.getElementById('fTitle').focus();
+}
+function closeForm() {
+  document.getElementById('formCard').classList.remove('open');
+}
+
+document.getElementById('fTitle').addEventListener('input', onTitleInput);
+document.getElementById('fPlatform').addEventListener('change', onTitleInput);
+
+function onTitleInput() {
+  const title = document.getElementById('fTitle').value.trim();
+  clearTimeout(_similarTimer);
+  document.getElementById('formErr').classList.remove('show');
+  if (title.length < 2) {
+    document.getElementById('similarBox').classList.remove('show');
+    document.getElementById('catalogBox').classList.remove('show');
+    _catalogMatchFound = null;
+    return;
+  }
+  _similarTimer = setTimeout(async () => {
+    const platform = document.getElementById('fPlatform').value;
+
+    await ensureCatalog();
+    _catalogMatchFound = findCatalogMatch(title, platform);
+    const cbox = document.getElementById('catalogBox');
+    if (_catalogMatchFound) {
+      document.getElementById('catalogLink').href = `/games/${encodeURIComponent(_catalogMatchFound.slug)}.html`;
+      cbox.classList.add('show');
+    } else {
+      cbox.classList.remove('show');
+    }
+
+    const { data } = await rpc('find_similar_requests', { p_title: title, p_platform: platform || null });
+    const items = (data && data.items) || [];
+    const sbox = document.getElementById('similarBox');
+    if (items.length) {
+      document.getElementById('similarList').innerHTML = items.map(s => `
+        <div class="similar-row">
+          <span class="sr-name">${esc(s.title)} <span class="badge badge-plat" style="margin-left:4px;">${esc(s.platform)}</span></span>
+          <span class="sr-votes">▲ ${s.vote_count}</span>
+          <button onclick="voteFromSimilar(${s.id}, this)">Vote</button>
+        </div>`).join('');
+      sbox.classList.add('show');
+    } else {
+      sbox.classList.remove('show');
+    }
+  }, SEARCH_DEBOUNCE_MS);
+}
+
+async function voteFromSimilar(id, btnEl) {
+  btnEl.disabled = true;
+  const { data } = await rpc('cast_vote', { p_request_id: id, p_device: getDeviceId() });
+  if (data && (data.status === 'ok' || data.status === 'already_voted')) {
+    btnEl.textContent = '✓';
+    showToast(data.status === 'ok' ? t('submitOk') : t('voteAlready'));
+  } else {
+    btnEl.disabled = false;
+  }
+}
+
+async function submitNewRequest() {
+  const errEl = document.getElementById('formErr');
+  const btn   = document.getElementById('formSubmitBtn');
+  errEl.classList.remove('show');
+
+  const hp = document.getElementById('hp-website').value;
+  const tooFast = (Date.now() - _formOpenedAt) < MIN_SUBMIT_MS;
+  if (hp) return;
+  if (tooFast) {
+    errEl.textContent = t('submitBusy');
+    errEl.classList.add('show');
+    return;
+  }
+
+  const title    = document.getElementById('fTitle').value.trim();
+  const platform = document.getElementById('fPlatform').value;
+  const note     = document.getElementById('fNote').value.trim();
+
+  if (title.length < 2) { errEl.textContent = t('submitInvalidTitle'); errEl.classList.add('show'); return; }
+  if (PLATFORMS.indexOf(platform) === -1) { errEl.textContent = t('submitInvalidPlatform'); errEl.classList.add('show'); return; }
+
+  if (_catalogMatchFound) {
+    errEl.textContent = t('catalogFound');
+    errEl.classList.add('show');
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = t('formSubmitting');
+
+  const { data, error } = await rpc('submit_request', {
+    p_title: title, p_platform: platform, p_note: note || null, p_device: getDeviceId()
+  });
+
+  btn.disabled = false; btn.textContent = t('formSubmit');
+
+  if (error || !data) {
+    errEl.textContent = t('submitGeneric'); errEl.classList.add('show'); return;
+  }
+  if (data.status === 'ok') {
+    showToast(t('submitOk'));
+    document.getElementById('fTitle').value = '';
+    document.getElementById('fNote').value = '';
+    document.getElementById('similarBox').classList.remove('show');
+    document.getElementById('catalogBox').classList.remove('show');
+    closeForm();
+    reloadBoard();
+  } else if (data.status === 'duplicate') {
+    showToast(t('submitDuplicate'));
+    closeForm();
+    reloadBoard();
+  } else if (data.status === 'rate_limited') {
+    errEl.textContent = t('submitRateLimited'); errEl.classList.add('show');
+  } else if (data.status === 'no_ip') {
+    errEl.textContent = t('submitNoIp'); errEl.classList.add('show');
+  } else if (data.status === 'invalid_title') {
+    errEl.textContent = t('submitInvalidTitle'); errEl.classList.add('show');
+  } else if (data.status === 'invalid_platform') {
+    errEl.textContent = t('submitInvalidPlatform'); errEl.classList.add('show');
+  } else {
+    errEl.textContent = t('submitGeneric'); errEl.classList.add('show');
+  }
+}
+
+(async function init() {
+  await initLocale();
+  initFilters();
+  ensureCatalog();
+  loadZeroPanel();
+  reloadBoard();
+
+  try {
+    const params = new URLSearchParams(location.search);
+    const q = params.get('q');
+    if (q && q.trim()) openForm(q.trim());
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>
